@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-/** The working mark: four 9px squares, the first gradient-filled, then the wordmark. */
+/**
+ * The brand mark: a gradient tile holding three squares and a sparkle, then
+ * the lowercase wordmark. The four <i> elements are what components.css
+ * styles — the last one is clipped into the sparkle.
+ */
 export function Logo({
   href = "/",
   style,
@@ -17,7 +21,7 @@ export function Logo({
         <i />
       </span>
       <span>
-        AllIn<b>One</b>
+        allin<b>one</b>
       </span>
     </Link>
   );

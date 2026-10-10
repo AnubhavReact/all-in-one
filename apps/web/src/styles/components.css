@@ -41,11 +41,11 @@
 
 /* ---------- Navbar ---------- */
 .aio-nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: var(--space-6); height: 64px; padding: 0 var(--space-8); background: var(--surface-glass); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
-.aio-logo { display: inline-flex; align-items: center; gap: 10px; font: 800 18px/1 var(--font-display); letter-spacing: -0.02em; color: var(--ink); }
-.aio-logo-mark { display: grid; grid-template-columns: 9px 9px; gap: 3px; }
-.aio-logo-mark i { width: 9px; height: 9px; border-radius: 3px; background: var(--line-strong); }
-.aio-logo-mark i:first-child { background: linear-gradient(135deg, var(--brand), var(--grad-text-end)); }
-.aio-logo-mark i:last-child { background: var(--brand-text); opacity: .55; }
+.aio-logo { display: inline-flex; align-items: center; gap: 10px; font: 800 20px/1 var(--font-display); letter-spacing: -0.03em; color: var(--ink); }
+.aio-logo-mark { display: grid; grid-template-columns: 8px 8px; gap: 4px; place-content: center; width: 30px; height: 30px; flex: none; border-radius: 9px; background: linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); }
+.aio-logo-mark i { width: 8px; height: 8px; border-radius: 2.5px; background: #ffffff; }
+.aio-logo-mark i:nth-child(2), .aio-logo-mark i:nth-child(3) { opacity: .62; }
+.aio-logo-mark i:last-child { border-radius: 0; transform: scale(1.35); clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); }
 .aio-logo b { color: var(--brand-text); font-weight: 700; }
 .aio-nav-links { display: flex; gap: 2px; }
 .aio-nav-links a { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; color: var(--ink-muted); }
