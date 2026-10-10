@@ -1,0 +1,18 @@
+node_modules/
+.next/
+out/
+dist/
+build/
+.turbo/
+*.tsbuildinfo
+
+# Secrets — never commit these. Copy .env.example and fill it in locally.
+.env
+.env.local
+.env*.local
+
+.DS_Store
+*.pem
+npm-debug.log*
+coverage/
+.expo/

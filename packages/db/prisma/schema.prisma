@@ -1,0 +1,210 @@
+// All In One — database schema.
+//
+// Identity lives in Supabase Auth (the `auth.users` table it manages for us).
+// Profile.id holds that same UUID, so everything below hangs off one id we
+// already have the moment someone signs in.
+//
+// Note what is NOT here: the PDF tools. Merging, splitting and converting all
+// happen in the browser, so those files never reach a server or this database.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+// From Prisma 7 the connection URL lives in prisma.config.ts, not here.
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Profile {
+  id        String   @id @db.Uuid
+  email     String   @unique
+  fullName  String?
+  phone     String?
+  avatarUrl String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  resumes       Resume[]
+  atsReports    AtsReport[]
+  savedJobs     SavedJob[]
+  taxEstimates  TaxEstimate[]
+  chats         Chat[]
+
+  @@map("profiles")
+}
+
+// ---------------------------------------------------------------- resumes
+
+model Resume {
+  id        String   @id @default(uuid()) @db.Uuid
+  profileId String   @db.Uuid
+  title     String
+  /// The whole resume as structured JSON: contact, experience, education,
+  /// skills. Kept as JSON so adding a section needs no migration.
+  content   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile    Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  atsReports AtsReport[]
+
+  @@index([profileId, updatedAt])
+  @@map("resumes")
+}
+
+model AtsReport {
+  id       String @id @default(uuid()) @db.Uuid
+  profileId String @db.Uuid
+  resumeId String? @db.Uuid
+
+  jobTitle       String
+  jobDescription String  @db.Text
+  /// 0–100.
+  score          Int
+  /// Per-check detail: matched keywords, missing keywords, formatting flags.
+  breakdown      Json
+  createdAt      DateTime @default(now())
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  resume  Resume? @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+
+  @@index([profileId, createdAt])
+  @@map("ats_reports")
+}
+
+// ------------------------------------------------------------------- jobs
+
+/// A listing pulled from a public job feed and cached here, so searches are
+/// fast and we stay inside each provider's rate limit.
+model Job {
+  id       String @id @default(uuid()) @db.Uuid
+  /// Which feed this came from, e.g. "adzuna", "remoteok".
+  source   String
+  /// That feed's own id for the listing, used to avoid duplicates.
+  sourceId String
+
+  title       String
+  company     String
+  location    String?
+  isRemote    Boolean  @default(false)
+  url         String   @db.Text
+  description String?  @db.Text
+  salaryMin   Int?
+  salaryMax   Int?
+  currency    String?  @db.VarChar(3)
+  postedAt    DateTime?
+  fetchedAt   DateTime @default(now())
+
+  savedBy SavedJob[]
+
+  @@unique([source, sourceId])
+  @@index([postedAt])
+  @@index([isRemote, postedAt])
+  @@map("jobs")
+}
+
+enum ApplicationStatus {
+  SAVED
+  APPLIED
+  INTERVIEWING
+  OFFERED
+  REJECTED
+}
+
+/// Someone's own tracker row for a job: did they apply, and what happened.
+model SavedJob {
+  id        String            @id @default(uuid()) @db.Uuid
+  profileId String            @db.Uuid
+  jobId     String            @db.Uuid
+  status    ApplicationStatus @default(SAVED)
+  notes     String?           @db.Text
+  appliedAt DateTime?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  job     Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, jobId])
+  @@index([profileId, status])
+  @@map("saved_jobs")
+}
+
+// -------------------------------------------------------------------- tax
+
+enum TaxRegime {
+  OLD
+  NEW
+}
+
+/// One saved run of the tax calculator. Not a filed return — we compute and
+/// explain, the filing itself happens on the income tax portal.
+model TaxEstimate {
+  id             String    @id @default(uuid()) @db.Uuid
+  profileId      String    @db.Uuid
+  /// e.g. "2026-27".
+  assessmentYear String    @db.VarChar(7)
+  regime         TaxRegime
+  /// What the user entered: salary, HRA, 80C, and so on.
+  inputs         Json
+  /// What we worked out: slab-by-slab tax, cess, total payable.
+  result         Json
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, assessmentYear])
+  @@map("tax_estimates")
+}
+
+// --------------------------------------------------------------- ai chats
+
+enum AiProvider {
+  ANTHROPIC
+  OPENAI
+  GOOGLE
+}
+
+model Chat {
+  id        String     @id @default(uuid()) @db.Uuid
+  profileId String     @db.Uuid
+  title     String
+  provider  AiProvider
+  /// The exact model id used, e.g. "claude-opus-5".
+  model     String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  profile  Profile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+
+  @@index([profileId, updatedAt])
+  @@map("chats")
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid()) @db.Uuid
+  chatId    String   @db.Uuid
+  role      ChatRole
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([chatId, createdAt])
+  @@map("chat_messages")
+}

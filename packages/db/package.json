@@ -1,0 +1,27 @@
+{
+  "name": "@aio/db",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "prisma generate",
+    "dev": "prisma generate",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "7.10.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "prisma": "7.10.0",
+    "typescript": "6.0.3"
+  }
+}

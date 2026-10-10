@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "All In One",
+    "slug": "all-in-one",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.allinone.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#10243E",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.allinone.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "allinone"
+  }
+}
