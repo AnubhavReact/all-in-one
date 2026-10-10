@@ -798,6 +798,18 @@ body {
   color: var(--ink-muted);
 }
 
+/* Work in progress: what is happening, and how far along it is. */
+.aio-p-busy {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
 /* The collapsed drop target: one row that still takes a drop. */
 .aio-p-dropbar {
   display: flex;

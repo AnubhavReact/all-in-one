@@ -32,7 +32,8 @@ export type RenderedPage = {
 export async function renderPages(
   file: File,
   options: { scale?: number; maxWidth?: number } = {},
-  onPage?: (page: RenderedPage) => void,
+  /** Called as each page finishes, with the document's total. */
+  onPage?: (page: RenderedPage, total: number) => void,
 ): Promise<RenderedPage[]> {
   const { getDocument } = await getPdfjs();
   const data = new Uint8Array(await file.arrayBuffer());
@@ -59,7 +60,7 @@ export async function renderPages(
 
       const result = { index: number - 1, canvas };
       rendered.push(result);
-      onPage?.(result);
+      onPage?.(result, doc.numPages);
     }
   } finally {
     await doc.destroy();

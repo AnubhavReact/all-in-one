@@ -20,18 +20,25 @@ export default function PdfToImages() {
   const [file, setFile] = useState<File | null>(null);
   const [quality, setQuality] = useState<QualityKey>("screen");
   const [progress, setProgress] = useState<string | null>(null);
+  const [done, setDone] = useState({ page: 0, total: 0 });
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function convert() {
-    if (!file) return;
+    if (!file || busy) return;
     setError(null);
+    setBusy(true);
+    setDone({ page: 0, total: 0 });
     setProgress("Reading the PDF…");
     try {
       const zip = new JSZip();
       const pages = await renderPages(
         file,
         { scale: QUALITY[quality].scale },
-        (page) => setProgress(`Page ${page.index + 1} done`),
+        (page, total) => {
+          setDone({ page: page.index + 1, total });
+          setProgress(`Drawing page ${page.index + 1} of ${total}`);
+        },
       );
       const width = String(pages.length).length;
       for (const page of pages) {
@@ -47,11 +54,14 @@ export default function PdfToImages() {
       setProgress(`${pages.length} images saved.`);
     } catch (cause) {
       setProgress(null);
+      setDone({ page: 0, total: 0 });
       setError(
         cause instanceof Error
           ? cause.message
           : "That file could not be converted. Check it opens in a PDF reader.",
       );
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -121,8 +131,13 @@ export default function PdfToImages() {
 
           {error && <Note tone="error">{error}</Note>}
           {progress && !error && (
-            <div aria-live="polite">
-              <Note icon="clock">{progress}</Note>
+            <div className="aio-p-busy" aria-live="polite">
+              <span>{progress}</span>
+              {done.total > 0 && (
+                <div className="aio-progress">
+                  <i style={{ width: `${(done.page / done.total) * 100}%` }} />
+                </div>
+              )}
             </div>
           )}
 
@@ -131,9 +146,10 @@ export default function PdfToImages() {
               type="button"
               className="aio-btn aio-btn--primary"
               onClick={convert}
+              disabled={busy}
             >
               <Icon name="download" />
-              Convert to PNGs
+              {busy ? "Converting…" : "Convert to PNGs"}
             </button>
             <button
               type="button"
