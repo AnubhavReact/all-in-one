@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
   // while the app is being built. Bottom-right is now the "Ask AI" launcher,
   // and the sidebar's account card is above bottom-left, so it goes there.
   devIndicators: { position: "bottom-left" },
+
+  // v3 made the home page the app, so the dashboard route has nothing left
+  // to show. 307, not 308: a browser should not cache this for ever if a
+  // real signed-in dashboard turns up later.
+  async redirects() {
+    return [{ source: "/dashboard", destination: "/", permanent: false }];
+  },
 };
 
 export default nextConfig;

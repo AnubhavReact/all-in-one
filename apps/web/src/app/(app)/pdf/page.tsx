@@ -14,7 +14,7 @@ export default function PdfIndex() {
   const tools = toolsByHue("pdf");
 
   return (
-    <div className="aio-p-sec">
+    <div className="aio-page">
       <div className="aio-p-head">
         <div>
           <span className="aio-eyebrow">PDF tools</span>

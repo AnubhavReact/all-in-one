@@ -4,48 +4,101 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { AiShell, openPalette } from "@/components/ai/AiShell";
+import { AiRail } from "@/components/ai/AiRail";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
+type Row = {
+  label: string;
+  href: string;
+  icon: string;
+  /** "live" draws the green dot; anything else is printed as a tag. */
+  mark: "live" | "Soon" | "Key" | null;
+};
+
 /**
- * The rail only lists pages that exist. "All tools", "My files" and
- * "Applications" are in the design but have nowhere to go yet, and two rows
- * pointing at the same route would both light up as the current page.
+ * The rail from AppHome.md, minus two rows.
+ *
+ * The design lists "All tools" and "Recent files" above the categories. There
+ * is no page behind either one — recent files live on the home page — and a
+ * row pointing nowhere is worse than a row that is missing.
  */
-const GROUPS = [
+const GROUPS: { heading: string | null; rows: Row[] }[] = [
   {
     heading: null,
-    items: [{ label: "Dashboard", href: "/dashboard", icon: "home" }],
+    rows: [{ label: "Home", href: "/", icon: "home", mark: null }],
   },
   {
-    heading: "Documents",
-    items: [{ label: "PDF tools", href: "/pdf", icon: "file", count: "5" }],
+    heading: "PDF tools",
+    rows: [
+      { label: "Merge PDFs", href: "/pdf/merge", icon: "merge", mark: "live" },
+      { label: "Split PDF", href: "/pdf/split", icon: "split", mark: "live" },
+      {
+        label: "Rotate & delete",
+        href: "/pdf/organise",
+        icon: "rotate",
+        mark: "live",
+      },
+      {
+        label: "PDF to images",
+        href: "/pdf/to-images",
+        icon: "image",
+        mark: "live",
+      },
+      {
+        label: "Images to PDF",
+        href: "/pdf/from-images",
+        icon: "file",
+        mark: "live",
+      },
+    ],
   },
   {
     heading: "Career",
-    items: [
-      { label: "Jobs", href: "/jobs", icon: "briefcase", soon: true },
-      { label: "Resume", href: "/resume", icon: "resume", soon: true },
-      { label: "ATS check", href: "/ats", icon: "target", soon: true },
+    rows: [
+      { label: "Find jobs", href: "/jobs", icon: "briefcase", mark: "Soon" },
+      { label: "Resume", href: "/resume", icon: "resume", mark: "Soon" },
+      { label: "ATS check", href: "/ats", icon: "target", mark: "Soon" },
     ],
   },
   {
     heading: "Money & AI",
-    items: [
-      { label: "Tax & ITR", href: "/tax", icon: "rupee", soon: true },
-      { label: "AI chat", href: "/ai", icon: "chat", soon: true },
+    rows: [
+      { label: "Tax & ITR", href: "/tax", icon: "rupee", mark: "Soon" },
+      { label: "AI chat", href: "/ai", icon: "chat", mark: "Key" },
     ],
   },
 ];
 
-/** The signed-in shell: rail, top bar, content. Under 1024px the rail is a drawer. */
-export function AppShell({ children }: { children: React.ReactNode }) {
+/**
+ * The v3 shell: a 248px rail, a fluid workspace and a docked AI rail. It
+ * wraps the home page and every tool page, so the sidebar does the job the
+ * category tabs used to.
+ *
+ * Below 1440 the AI rail hides and the floating launcher takes over; below
+ * 1024 the sidebar becomes a drawer. The handoff's CSS does the first and
+ * hides the sidebar outright for the second, so the drawer is in app.css.
+ */
+export function AppShell({
+  children,
+  rail,
+}: {
+  children: React.ReactNode;
+  /** Defaults to the home page only; a tool page needs the room. */
+  rail?: boolean;
+}) {
   const pathname = usePathname();
   const [drawer, setDrawer] = useState(false);
+  // Collapsing the rail hands the assistant back to the floating launcher.
+  const [railOpen, setRailOpen] = useState(true);
+  const showRail = (rail ?? pathname === "/") && railOpen;
 
   return (
-    <div className="aio-p-app" data-drawer={drawer ? "open" : "closed"}>
+    <div
+      className={showRail ? "aio-shell" : "aio-shell aio-shell--no-rail"}
+      data-drawer={drawer ? "open" : "closed"}
+    >
       {drawer && (
         <button
           type="button"
@@ -58,39 +111,51 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <aside className="aio-side">
         <Logo style={{ padding: "4px 10px 0" }} />
 
+        <Link
+          className="aio-btn aio-btn--primary aio-side-new"
+          href="/pdf"
+          onClick={() => setDrawer(false)}
+        >
+          <Icon name="upload" />
+          Open a file
+        </Link>
+
         {GROUPS.map((group, index) => (
           <nav className="aio-side-group" key={group.heading ?? index}>
             {group.heading && <h6>{group.heading}</h6>}
-            {group.items.map((item) => (
+            {group.rows.map((row) => (
               <Link
-                key={`${item.label}-${item.href}`}
-                href={item.href}
-                aria-current={pathname === item.href ? "page" : undefined}
+                key={row.href}
+                href={row.href}
+                className={group.heading ? "sub" : undefined}
+                aria-current={pathname === row.href ? "page" : undefined}
                 onClick={() => setDrawer(false)}
               >
-                <Icon name={item.icon} />
-                {item.label}
-                {"count" in item && item.count && (
-                  <span className="n">{item.count}</span>
-                )}
-                {"soon" in item && item.soon && (
-                  <span className="aio-badge aio-badge--soon">Soon</span>
+                <Icon name={row.icon} />
+                {row.label}
+                {row.mark === "live" ? (
+                  <span className="live" title="Live" />
+                ) : (
+                  row.mark && <span className="soon">{row.mark}</span>
                 )}
               </Link>
             ))}
           </nav>
         ))}
 
-        <div className="aio-side-foot">
-          <span className="aio-avatar">AS</span>
-          <div>
-            <strong>Your account</strong>
-            <span>Not signed in yet</span>
-          </div>
+        <div className="aio-side-card" style={{ marginTop: "auto" }}>
+          <strong>Accounts are coming</strong>
+          <p>
+            Everything here already works without one — PDFs never leave your
+            device either way.
+          </p>
+          <Link className="aio-btn aio-btn--secondary aio-btn--sm" href="/welcome">
+            What&rsquo;s planned
+          </Link>
         </div>
       </aside>
 
-      <div className="aio-p-main">
+      <main className="aio-main">
         <div className="aio-topbar">
           <button
             type="button"
@@ -105,27 +170,47 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             className="aio-nav-search aio-p-navsearch"
+            style={{ width: 440 }}
             onClick={openPalette}
           >
             <Icon name="search" />
-            <span>Search tools, files, jobs…</span>
+            <span>Search tools, files, or ask AI…</span>
             <span className="aio-kbd">&#8984;K</span>
           </button>
 
           <div className="spacer" />
 
-          <Link className="aio-btn aio-btn--primary aio-btn--sm" href="/">
-            <Icon name="upload" />
-            Upload file
-          </Link>
+          <span className="aio-p-livepill">
+            <i />5 PDF tools live
+          </span>
           <ThemeToggle />
-          <span className="aio-avatar">AS</span>
+          <Link className="aio-btn aio-btn--ghost aio-btn--sm" href="/welcome">
+            Sign in
+          </Link>
+          <Link className="aio-btn aio-btn--primary aio-btn--sm" href="/pdf">
+            Open a tool
+          </Link>
         </div>
 
         {children}
-      </div>
 
-      <AiShell />
+        <footer className="aio-app-foot">
+          <span>
+            &copy; 2026 AllInOne &middot; Made in India &middot; Files never
+            leave your device
+          </span>
+          <nav>
+            <Link href="/welcome">About</Link>
+            <Link href="/pdf">PDF tools</Link>
+            <Link href="/tax">Tax &amp; ITR</Link>
+            <Link href="/ai">AI chat</Link>
+          </nav>
+        </footer>
+      </main>
+
+      {showRail && <AiRail onCollapse={() => setRailOpen(false)} />}
+
+      <AiShell hasRail={showRail} />
     </div>
   );
 }

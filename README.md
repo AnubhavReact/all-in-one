@@ -32,7 +32,7 @@ run and work on the PDF tools without setting up Supabase at all.
 
 ## The design
 
-The interface follows a design handoff (v2): *dusk*, a deep navy rather than
+The interface follows a design handoff (v3): *dusk*, a deep navy rather than
 black, with a blue→cyan gradient marking the next step on each view. Light is
 the alternative theme and the toggle remembers the choice. Headings are Plus
 Jakarta Sans, text is Inter and figures are JetBrains Mono, all self-hosted by
@@ -51,6 +51,21 @@ Rules worth keeping: never hard-code a hex value, use `var(--token)`; one
 gradient primary button per view, with the "Ask AI" launcher the only other
 gradient; category colours tint icon tiles only; and a tool that is not built
 shows *Coming soon* and is not a link.
+
+### The shape of the app
+
+v3 made the home page the app rather than a landing page. `/` is a workspace:
+a 248px sidebar listing every tool, a full-width middle, and the assistant
+docked on the right above 1440px. Every tool page sits in the same shell, so
+the sidebar is the navigation — the marketing page with the navbar, hero and
+bento lives at `/welcome` for links and ads, and `/dashboard` redirects to
+`/`.
+
+**Recent files** on the home page is real: `src/lib/history.ts` keeps the
+name, tool, size and time of everything the PDF tools produce, in
+localStorage. Never the file — that was never uploaded and is gone once the
+download finishes. Every tool funnels through `saveFile`, so that one
+function does the recording and no tool can forget.
 
 ### The AI surfaces
 

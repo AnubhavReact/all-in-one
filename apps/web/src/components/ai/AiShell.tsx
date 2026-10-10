@@ -9,8 +9,11 @@ import { Icon } from "@/components/ui/Icon";
  * Mounts the three AI surfaces once for the whole app and owns the state they
  * share: ⌘K opens the palette, ⌘J the assistant, and Tab in the palette hands
  * the query over to the assistant.
+ *
+ * `hasRail` means the page already docks the assistant on the right, so the
+ * floating launcher is hidden at the widths where that rail is visible.
  */
-export function AiShell() {
+export function AiShell({ hasRail = false }: { hasRail?: boolean } = {}) {
   const [cmdOpen, setCmdOpen] = useState(false);
   const [assistOpen, setAssistOpen] = useState(false);
   const [seed, setSeed] = useState("");
@@ -60,7 +63,11 @@ export function AiShell() {
       {!assistOpen && (
         <button
           type="button"
-          className="aio-launcher aio-p-launcher"
+          className={
+            hasRail
+              ? "aio-launcher aio-p-launcher aio-p-launcher--rail"
+              : "aio-launcher aio-p-launcher"
+          }
           onClick={() => setAssistOpen(true)}
         >
           <span className="orb">

@@ -10,7 +10,7 @@ import { Icon } from "@/components/ui/Icon";
 export type AskChip = { label: string; icon: string; href: string };
 
 /**
- * The ask bar from the v2 handoff: the hero's and the dashboard's front door.
+ * The ask bar: the front door on the home page and the marketing page.
  *
  * It does the half of the job that needs no model. Whatever is typed is
  * matched against the tool catalogue and opens that tool, and an attached
@@ -28,7 +28,7 @@ export function AskBar({
 }: {
   placeholder: string;
   chips: readonly AskChip[];
-  /** The dashboard's copy sits inside a card, so it drops the outer glow. */
+  /** Inside a card or a hero band, so it drops the outer glow. */
   flat?: boolean;
 }) {
   const router = useRouter();

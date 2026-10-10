@@ -84,7 +84,7 @@ export default async function SectionPage({
   const tool = TOOLS.find((t) => t.slug === section);
 
   return (
-    <div className="aio-p-sec">
+    <div className="aio-page">
       <div className="aio-row" style={{ gap: "var(--space-3)" }}>
         <span className={`aio-tile aio-tile--${found.hue}`}>
           <Icon name={tool?.icon ?? "grid"} />

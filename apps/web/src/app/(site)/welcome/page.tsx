@@ -399,10 +399,10 @@ export default function Home() {
             </Link>
             <Link
               className="aio-btn aio-btn--secondary aio-btn--lg"
-              href="/dashboard"
+              href="/"
             >
               <Icon name="grid" />
-              See the dashboard
+              Open the workspace
             </Link>
           </div>
         </div>

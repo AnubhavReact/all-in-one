@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "@/styles/tokens.css";
 import "@/styles/components.css";
@@ -67,6 +68,9 @@ export const viewport: Viewport = { themeColor: "#111a2e" };
 /**
  * Applies the saved theme before the first paint. Without this the page
  * renders in dusk and then jumps to light for anyone who chose light.
+ *
+ * It goes through next/script with beforeInteractive, not a bare <script>:
+ * React never runs a script tag it renders itself, and warns about it.
  */
 const THEME_SCRIPT = `try{var t=localStorage.getItem('aio-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}`;
 
@@ -80,10 +84,10 @@ export default function RootLayout({
       className={`${jakarta.variable} ${inter.variable} ${jetBrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-      </head>
       <body>
+        <Script id="aio-theme" strategy="beforeInteractive">
+          {THEME_SCRIPT}
+        </Script>
         <div className="aio">{children}</div>
       </body>
     </html>

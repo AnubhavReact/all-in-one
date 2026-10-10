@@ -1,3 +1,6 @@
+import { TOOLS } from "@aio/core";
+import { recordFile } from "./history";
+
 /**
  * pdf-lib and friends hand back a Uint8Array whose backing buffer TypeScript
  * only knows as ArrayBufferLike, which Blob will not take. Copying the bytes
@@ -29,6 +32,16 @@ export function saveFile(
   link.download = filename;
   link.click();
   URL.revokeObjectURL(url);
+
+  // Every tool hands its result to this one function, so this is the only
+  // place that has to remember the file — no tool can forget to.
+  const tool = TOOLS.find((t) => t.href === window.location.pathname);
+  recordFile({
+    name: filename,
+    tool: tool?.name ?? "PDF tools",
+    icon: tool?.icon ?? "file",
+    bytes: blob.size,
+  });
 }
 
 /** "report.pdf" -> "report" */

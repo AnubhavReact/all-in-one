@@ -18,7 +18,12 @@ const QUICK = [
  * The front door. Drop a file and we work out which tools can open it, rather
  * than making someone guess the right one from a list.
  */
-export function HeroDrop() {
+export function HeroDrop({
+  /** "bare" drops the card and the shortcut row, for the v3 hero band. */
+  variant = "card",
+}: {
+  variant?: "card" | "bare";
+} = {}) {
   const router = useRouter();
   const [over, setOver] = useState(false);
   const [dropped, setDropped] = useState<File | null>(null);
@@ -48,7 +53,7 @@ export function HeroDrop() {
   }
 
   return (
-    <div className="aio-p-dropcard">
+    <div className={variant === "bare" ? "aio-p-dropbare" : "aio-p-dropcard"}>
       <div
         className="aio-drop"
         data-over={over}
@@ -124,7 +129,7 @@ export function HeroDrop() {
         </div>
       )}
 
-      {!dropped && !unknown && (
+      {variant === "card" && !dropped && !unknown && (
         <div className="aio-p-quick">
           {QUICK.map((item) => (
             <Link href={item.href} key={item.href}>

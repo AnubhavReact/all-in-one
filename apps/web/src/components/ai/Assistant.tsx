@@ -11,7 +11,6 @@ function pageName(pathname: string): string {
   if (tool) return tool.name;
   const section = SECTIONS.find((s) => s.href === pathname);
   if (section) return section.name;
-  if (pathname.startsWith("/dashboard")) return "your dashboard";
   return "the home page";
 }
 

@@ -125,11 +125,11 @@ export function Navbar() {
           <Icon name="menu" />
         </button>
         <ThemeToggle />
-        <Link className="aio-btn aio-btn--ghost" href="/dashboard">
-          Sign in
+        <Link className="aio-btn aio-btn--ghost" href="/pdf">
+          PDF tools
         </Link>
-        <Link className="aio-btn aio-btn--primary" href="/dashboard">
-          Get started
+        <Link className="aio-btn aio-btn--primary" href="/">
+          Open the app
         </Link>
       </div>
 
@@ -194,9 +194,9 @@ export function Navbar() {
               </Link>
             ))}
             {/* Hidden from the bar itself at this width, so it belongs here. */}
-            <Link href="/dashboard" role="menuitem" onClick={closeMenus}>
+            <Link href="/" role="menuitem" onClick={closeMenus}>
               <div>
-                <strong>Sign in</strong>
+                <strong>Open the app</strong>
               </div>
             </Link>
           </div>

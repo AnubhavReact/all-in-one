@@ -26,7 +26,7 @@ const CHROME_PATHS = [
   "/usr/bin/chromium",
 ];
 
-const PAGES = ["/", "/pdf", "/pdf/merge", "/pdf/split", "/dashboard", "/jobs"];
+const PAGES = ["/", "/welcome", "/pdf", "/pdf/merge", "/pdf/split", "/jobs"];
 const WIDTHS = [390, 768, 1440];
 
 async function findChrome() {
@@ -99,13 +99,31 @@ const STATES = [
   },
   {
     name: "assistant",
+    // On the home page at 1440 the assistant is already docked in the rail,
+    // so the launcher only exists on the marketing page at that width.
+    path: "/welcome",
     open: async (page) => {
       await page.click(".aio-p-launcher");
       await page.waitForSelector(".aio-assist-foot");
     },
   },
   {
+    name: "drawer",
+    // The sidebar is the navigation, and below 1024 it only exists after a
+    // tap, so it never gets looked at otherwise.
+    open: async (page) => {
+      await page.click(".aio-p-drawerclose");
+      await page.waitForFunction(
+        () =>
+          document.querySelector(".aio-shell")?.getAttribute("data-drawer") ===
+          "open",
+      );
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    },
+  },
+  {
     name: "mega",
+    path: "/welcome",
     open: async (page) => {
       // Hover, never click: a click on the trigger navigates to /pdf.
       await page.hover(".aio-nav-links a");
@@ -116,14 +134,18 @@ const STATES = [
 
 for (const width of [390, 1440]) {
   for (const state of STATES) {
-    // The mega menu is a desktop-only control.
+    // The mega menu is desktop-only; the drawer is the opposite.
     if (state.name === "mega" && width < 1024) continue;
+    if (state.name === "drawer" && width >= 1024) continue;
 
     const page = await browser.newPage();
     const errors = [];
     page.on("pageerror", (error) => errors.push(String(error)));
     await page.setViewport({ width, height: 900, deviceScaleFactor: 2 });
-    await page.goto(BASE + "/", { waitUntil: "networkidle0", timeout: 45000 });
+    await page.goto(BASE + (state.path ?? "/"), {
+      waitUntil: "networkidle0",
+      timeout: 45000,
+    });
     await page.evaluate(() => document.fonts.ready);
     await state.open(page);
 
