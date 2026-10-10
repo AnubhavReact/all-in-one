@@ -69,6 +69,11 @@ export default function SplitPdf() {
       icon="split"
       section="PDF tools"
       sectionHref="/pdf"
+      steps={[
+        "Add a PDF — we read how many pages it has",
+        "Pick a range like 2-5, or split every page",
+        "Download what you picked",
+      ]}
       title="Split PDF"
       blurb="Take out the pages you need, or break the whole document into one file per page."
     >

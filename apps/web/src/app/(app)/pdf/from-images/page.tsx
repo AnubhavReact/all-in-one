@@ -79,6 +79,11 @@ export default function ImagesToPdf() {
       icon="file"
       section="PDF tools"
       sectionHref="/pdf"
+      steps={[
+        "Add JPGs or PNGs",
+        "Put them in the order you want",
+        "Download one PDF",
+      ]}
       title="Images to PDF"
       blurb="Photos of documents, screenshots or scans, stacked into one PDF in the order you set."
     >

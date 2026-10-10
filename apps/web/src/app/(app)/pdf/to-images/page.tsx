@@ -61,6 +61,11 @@ export default function PdfToImages() {
       icon="image"
       section="PDF tools"
       sectionHref="/pdf"
+      steps={[
+        "Add a PDF",
+        "Every page is drawn to a PNG in this tab",
+        "Download them together in one zip",
+      ]}
       title="PDF to images"
       blurb="Save every page as a PNG. They come down together in a zip, so a 40-page document is still one download."
     >

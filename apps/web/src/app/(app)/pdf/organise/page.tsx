@@ -79,6 +79,11 @@ export default function OrganisePdf() {
       icon="rotate"
       section="PDF tools"
       sectionHref="/pdf"
+      steps={[
+        "Add a PDF to see every page",
+        "Rotate or drop the pages you don\u2019t want",
+        "Download the fixed file",
+      ]}
       title="Rotate & delete pages"
       blurb="Sideways scans and blank pages, fixed. Turn any page, mark the ones you don't want, then save a new PDF."
     >

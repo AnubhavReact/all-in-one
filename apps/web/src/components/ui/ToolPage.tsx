@@ -1,8 +1,14 @@
-import Link from "next/link";
-import { Icon } from "@/components/ui/Icon";
 import type { TileHue } from "@aio/core";
+import { Icon } from "@/components/ui/Icon";
+import { PageHead } from "@/components/ui/PageHead";
 
-/** The shell every tool page shares: breadcrumb, icon tile, title, standfirst. */
+/**
+ * The shell every tool page shares.
+ *
+ * The work itself stays in a readable column. The space the sidebar leaves
+ * on the right explains the tool in three steps — not a list of the other
+ * tools, which is what the sidebar already is.
+ */
 export function ToolPage({
   hue,
   icon,
@@ -10,6 +16,7 @@ export function ToolPage({
   sectionHref,
   title,
   blurb,
+  steps,
   children,
 }: {
   hue: TileHue;
@@ -18,32 +25,49 @@ export function ToolPage({
   sectionHref: string;
   title: string;
   blurb: string;
+  /** Three short steps: what happens, in order. */
+  steps: readonly string[];
   children: React.ReactNode;
 }) {
   return (
-    <div className="aio-p-tool">
-      <header className="aio-p-toolhead">
-        <Link className="aio-p-crumb" href={sectionHref}>
-          {/* The set has no left chevron; the down one turned a quarter is it. */}
-          <Icon name="chevron" className="aio-p-crumb-caret" />
-          {section}
-        </Link>
+    <div className="aio-page">
+      <PageHead
+        icon={icon}
+        hue={hue}
+        title={title}
+        blurb={blurb}
+        back={{ label: section, href: sectionHref }}
+      />
 
-        <div className="aio-row" style={{ gap: "var(--space-3)" }}>
-          <span className={`aio-tile aio-tile--${hue}`}>
-            <Icon name={icon} />
-          </span>
-          <h1 className="aio-h2" style={{ fontSize: 34, lineHeight: "40px" }}>
-            {title}
-          </h1>
-        </div>
+      <div className="aio-p-work">
+        <div className="aio-p-stack">{children}</div>
 
-        <p className="aio-lead" style={{ maxWidth: "62ch" }}>
-          {blurb}
-        </p>
-      </header>
+        <aside className="aio-p-aside">
+          <div className="aio-p-asidecard">
+            <h3>
+              <Icon name="sliders" />
+              How it works
+            </h3>
+            <ol className="aio-p-steps">
+              {steps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+          </div>
 
-      <div className="aio-p-stack">{children}</div>
+          <div className="aio-p-asidecard">
+            <h3>
+              <Icon name="shield" />
+              Nothing is uploaded
+            </h3>
+            <p>
+              This runs in the tab, on your machine. The file never reaches a
+              server, so there is no copy to delete afterwards and it works
+              with the wifi off.
+            </p>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SECTIONS, TOOLS, sectionById } from "@aio/core";
 import { Icon } from "@/components/ui/Icon";
-import { Note } from "@/components/ui/Note";
+import { PageHead } from "@/components/ui/PageHead";
 
 /** PDF has its own page; these five are the ones still being built. */
 const PLANNED = SECTIONS.filter((s) => s.id !== "pdf").map((s) => s.id);
@@ -85,48 +85,54 @@ export default async function SectionPage({
 
   return (
     <div className="aio-page">
-      <div className="aio-row" style={{ gap: "var(--space-3)" }}>
-        <span className={`aio-tile aio-tile--${found.hue}`}>
-          <Icon name={tool?.icon ?? "grid"} />
-        </span>
-        <span className="aio-badge aio-badge--soon">Coming soon</span>
-      </div>
+      <PageHead
+        icon={tool?.icon ?? "grid"}
+        hue={found.hue}
+        title={found.name}
+        blurb={found.blurb}
+        badge={<span className="aio-badge aio-badge--soon">Coming soon</span>}
+      />
 
-      <h1 className="aio-h2" style={{ marginTop: "var(--space-4)" }}>
-        {found.name}
-      </h1>
-      <p className="aio-lead" style={{ marginTop: 12, maxWidth: "62ch" }}>
-        {found.blurb}
-      </p>
-
-      <div
-        className="aio-card"
-        style={{ marginTop: "var(--space-8)", maxWidth: "70ch" }}
-      >
-        <div className="aio-card-head">
-          <h3>What this will do</h3>
+      <div className="aio-p-explain">
+        <div className="aio-card">
+          <div className="aio-card-head">
+            <h3>What this will do</h3>
+          </div>
+          <ul className="aio-p-feat" style={{ margin: 0 }}>
+            {plan?.steps.map((step) => (
+              <li key={step}>
+                <Icon name="check" />
+                <span>{step}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="aio-p-feat" style={{ margin: 0 }}>
-          {plan?.steps.map((step) => (
-            <li key={step}>
-              <Icon name="check" />
-              <span>{step}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
 
-      {plan?.snag && (
-        <div style={{ marginTop: "var(--space-4)", maxWidth: "70ch" }}>
-          <Note icon="lock">{plan.snag}</Note>
+        <div className="aio-p-aside">
+          {plan?.snag && (
+            <div className="aio-p-asidecard">
+              <h3>
+                <Icon name="lock" />
+                The catch
+              </h3>
+              <p>{plan.snag}</p>
+            </div>
+          )}
+
+          <div className="aio-p-asidecard">
+            <h3>
+              <Icon name="clock" />
+              Until then
+            </h3>
+            <p>
+              The five PDF tools are built and need no account. This page gets
+              replaced by the real thing when it ships.
+            </p>
+            <Link className="aio-btn aio-btn--primary aio-btn--sm" href="/pdf">
+              Open the PDF tools
+            </Link>
+          </div>
         </div>
-      )}
-
-      <div className="aio-p-actions" style={{ marginTop: "var(--space-8)" }}>
-        <Link className="aio-btn aio-btn--primary" href="/pdf">
-          <Icon name="file" />
-          Use the PDF tools meanwhile
-        </Link>
       </div>
     </div>
   );

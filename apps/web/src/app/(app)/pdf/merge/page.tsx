@@ -49,6 +49,11 @@ export default function MergePdf() {
       icon="merge"
       section="PDF tools"
       sectionHref="/pdf"
+      steps={[
+        "Add two or more PDFs",
+        "Drag the rows to set the order",
+        "Download one merged file",
+      ]}
       title="Merge PDFs"
       blurb="Add two or more PDFs, put them in the order you want, and download one file."
     >

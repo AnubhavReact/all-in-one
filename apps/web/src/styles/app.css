@@ -207,7 +207,13 @@ body {
 }
 .aio-p-grid4 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-4);
+}
+/* The PDF hub holds exactly five, and a 4 + 1 row looked like a mistake. */
+.aio-p-grid5 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
   gap: var(--space-4);
 }
 .aio-p-split {
@@ -365,18 +371,6 @@ body {
   max-width: 620px;
 }
 
-/* ---------- Tool page (the working PDF tools) ---------- */
-.aio-p-tool {
-  /* Inside .aio-main, so no auto margins: the handoff asks for content
-   * left-aligned beside the sidebar, never centred in empty space. */
-  max-width: 880px;
-  padding: 28px 40px 48px;
-}
-.aio-p-toolhead {
-  display: grid;
-  gap: var(--space-3);
-  margin-bottom: var(--space-8);
-}
 .aio-p-crumb {
   display: inline-flex;
   align-items: center;
@@ -804,7 +798,170 @@ body {
   color: var(--ink-muted);
 }
 
+/* ---------- One page header for everything inside the shell ---------- */
+.aio-p-pagehead {
+  display: grid;
+  gap: 10px;
+}
+.aio-p-pagehead .aio-p-crumb {
+  justify-self: start;
+}
+.aio-p-pagehead-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.aio-p-pagehead-row .m {
+  flex: 1;
+  min-width: 0;
+}
+.aio-p-pagehead-row .t {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.aio-p-pagehead h1 {
+  margin: 0;
+  font: 700 26px/32px var(--font-display);
+  letter-spacing: -0.02em;
+}
+.aio-p-pagehead p {
+  margin: 4px 0 0;
+  max-width: 68ch;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-muted);
+}
+.aio-p-pagehead-act {
+  display: flex;
+  gap: var(--space-2);
+  flex: none;
+}
+
+/* ---------- Working layout: the tool, plus a helper rail ---------- */
+.aio-p-work {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 28px;
+  align-items: start;
+}
+/* Sticks below the 64px top bar while the tool scrolls. */
+.aio-p-aside {
+  position: sticky;
+  top: 88px;
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+.aio-p-asidecard {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+}
+.aio-p-asidecard h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font: 700 13px/18px var(--font-display);
+}
+.aio-p-asidecard h3 svg.i {
+  width: 15px;
+  height: 15px;
+  color: var(--brand-text);
+}
+.aio-p-asidecard p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--ink-muted);
+}
+/* A numbered how-it-works list inside an aside card. */
+.aio-p-steps {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.aio-p-steps li {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--ink-muted);
+}
+.aio-p-steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  font: 600 11px/1 var(--font-mono);
+  color: var(--ink);
+}
+
+.aio-p-asidelist {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+}
+.aio-p-asidelist a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+.aio-p-asidelist a:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+.aio-p-asidelist a[aria-current] {
+  background: var(--brand-soft);
+  color: var(--brand-text);
+}
+
+/* A section that is not built yet: the plan, and the catch beside it. */
+.aio-p-explain {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .aio-p-work,
+  .aio-p-explain {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Below the tool now, so the cards sit side by side instead of stacking. */
+  .aio-p-aside {
+    position: static;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+}
+
 /* ---------- v3 app shell: what the handoff left to us ---------- */
+
+/* The floating launcher sits over the bottom-right corner, which is where
+ * the footer's links are. The footer makes room for it. */
+.aio-app-foot {
+  padding-bottom: 84px;
+}
 
 /* The topbar's live count. */
 .aio-p-livepill {
@@ -1046,9 +1203,6 @@ body {
   .aio-footer-bottom {
     flex-direction: column;
     align-items: flex-start;
-  }
-  .aio-p-tool {
-    padding: var(--space-6) var(--space-4) var(--space-12);
   }
 }
 
