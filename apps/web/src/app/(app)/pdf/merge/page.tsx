@@ -6,13 +6,44 @@ import { ToolPage } from "@/components/ui/ToolPage";
 import { DropField } from "@/components/ui/DropField";
 import { Note } from "@/components/ui/Note";
 import { Icon } from "@/components/ui/Icon";
-import { mergeDocuments } from "@/lib/pdf";
+import { mergeDocuments, pageCount } from "@/lib/pdf";
 import { saveFile } from "@/lib/download";
 
+/** A file, with its page count once we have read it. */
+type Picked = { file: File; pages: number | null };
+
 export default function MergePdf() {
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<Picked[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const total = files.reduce((sum, row) => sum + (row.pages ?? 0), 0);
+  const counted = files.every((row) => row.pages !== null);
+
+  /**
+   * Reading the page count is what tells someone they picked the right file,
+   * and it is cheap — pdf-lib has to parse the document to merge it anyway.
+   */
+  function add(picked: File[]) {
+    const rows = picked
+      .filter((f) => f.type === "application/pdf")
+      .map((file) => ({ file, pages: null }));
+    setFiles((current) => [...current, ...rows]);
+
+    for (const row of rows) {
+      pageCount(row.file)
+        .then((pages) =>
+          setFiles((current) =>
+            current.map((item) =>
+              item.file === row.file ? { ...item, pages } : item,
+            ),
+          ),
+        )
+        .catch(() => {
+          // A file we cannot read will fail again, with a message, on merge.
+        });
+    }
+  }
 
   function move(index: number, by: number) {
     const next = [...files];
@@ -30,7 +61,7 @@ export default function MergePdf() {
     setBusy(true);
     setError(null);
     try {
-      const bytes = await mergeDocuments(files);
+      const bytes = await mergeDocuments(files.map((row) => row.file));
       saveFile(bytes, "merged.pdf", "application/pdf");
     } catch (cause) {
       setError(
@@ -51,7 +82,7 @@ export default function MergePdf() {
       sectionHref="/pdf"
       steps={[
         "Add two or more PDFs",
-        "Drag the rows to set the order",
+        "Use the arrows to set the order",
         "Download one merged file",
       ]}
       title="Merge PDFs"
@@ -60,24 +91,24 @@ export default function MergePdf() {
       <DropField
         accept="application/pdf"
         multiple
-        title="Add PDFs"
+        title={files.length > 0 ? "Add more PDFs" : "Add PDFs"}
         hint="Drop them here, or add a few at a time"
-        onFiles={(picked) =>
-          setFiles((current) => [
-            ...current,
-            ...picked.filter((f) => f.type === "application/pdf"),
-          ])
-        }
+        compact={files.length > 0}
+        onFiles={add}
       />
 
       {files.length > 0 && (
         <>
           <ol className="aio-p-files">
-            {files.map((file, index) => (
+            {files.map(({ file, pages }, index) => (
               <li className="aio-p-file" key={`${file.name}-${index}`}>
                 <span className="idx">{index + 1}</span>
                 <span className="name">{file.name}</span>
-                <span className="size">{formatBytes(file.size)}</span>
+                <span className="size">
+                  {pages === null ? "…" : `${pages} page${pages === 1 ? "" : "s"}`}
+                  {" · "}
+                  {formatBytes(file.size)}
+                </span>
                 <span className="ops">
                   <button
                     type="button"
@@ -120,7 +151,11 @@ export default function MergePdf() {
               disabled={files.length < 2 || busy}
             >
               <Icon name="download" />
-              {busy ? "Merging…" : `Merge ${files.length} PDFs`}
+              {busy
+                ? "Merging…"
+                : counted && total > 0
+                  ? `Merge ${files.length} PDFs · ${total} pages`
+                  : `Merge ${files.length} PDFs`}
             </button>
             <button
               type="button"

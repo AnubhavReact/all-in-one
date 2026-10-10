@@ -90,8 +90,9 @@ export default function ImagesToPdf() {
       <DropField
         accept="image/png,image/jpeg"
         multiple
-        title="Add images"
+        title={images.length > 0 ? "Add more images" : "Add images"}
         hint="PNG or JPEG, one page per image"
+        compact={images.length > 0}
         onFiles={(picked) => {
           const good = picked.filter((f) => ALLOWED.includes(f.type));
           setError(

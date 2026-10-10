@@ -798,6 +798,30 @@ body {
   color: var(--ink-muted);
 }
 
+/* The collapsed drop target: one row that still takes a drop. */
+.aio-p-dropbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 14px var(--space-4);
+  font: 600 14px/20px var(--font-sans);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.aio-p-dropbar svg.i {
+  color: var(--brand-text);
+}
+.aio-p-dropbar small {
+  margin-left: auto;
+}
+.aio-p-dropbar:hover,
+.aio-p-dropbar[data-over="true"] {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+
 /* ---------- One page header for everything inside the shell ---------- */
 .aio-p-pagehead {
   display: grid;
