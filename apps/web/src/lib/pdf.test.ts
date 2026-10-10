@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, degrees } from "pdf-lib";
 import {
   extractPages,
   imagesToPdf,
@@ -89,7 +89,7 @@ describe("rewritePages", () => {
 
   it("adds to a rotation the page already had", async () => {
     const source = await PDFDocument.create();
-    source.addPage([300, 400]).setRotation({ type: "degrees", angle: 90 });
+    source.addPage([300, 400]).setRotation(degrees(90));
     const file = new File([new Uint8Array(await source.save())], "r.pdf", {
       type: "application/pdf",
     });
