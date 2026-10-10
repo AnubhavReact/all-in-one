@@ -52,6 +52,19 @@ tool that is not built shows *Coming soon* and is not a link.
 There is no Tailwind. The handoff ships complete CSS, and its reset fought the
 component classes.
 
+### Looking at it
+
+A passing build says nothing about whether a menu's rows overlap. With the dev
+server running:
+
+```sh
+npm run shots --workspace=@aio/web
+```
+
+It drives the Chrome already on the machine, saves every page at 390, 768 and
+1440 into `apps/web/.shots/`, and fails if a page scrolls sideways or logs a
+console error.
+
 ## How this is laid out
 
 ```

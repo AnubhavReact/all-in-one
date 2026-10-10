@@ -18,26 +18,21 @@ const MEGA = [
 export function Navbar() {
   const pathname = usePathname();
   const [megaOpen, setMegaOpen] = useState(false);
+  const [megaLeft, setMegaLeft] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const megaRef = useRef<HTMLDivElement>(null);
+
+  const triggerRef = useRef<HTMLAnchorElement>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Esc closes whichever is open; a click outside closes the mega menu.
+  // Esc closes whichever menu is open.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
       setMegaOpen(false);
       setMenuOpen(false);
     }
-    function onClick(event: MouseEvent) {
-      if (!megaRef.current?.contains(event.target as Node)) setMegaOpen(false);
-    }
     document.addEventListener("keydown", onKey);
-    document.addEventListener("mousedown", onClick);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.removeEventListener("mousedown", onClick);
-    };
+    return () => document.removeEventListener("keydown", onKey);
   }, []);
 
   /** Navigating away should never leave a menu hanging open. */
@@ -46,84 +41,55 @@ export function Navbar() {
     setMenuOpen(false);
   }
 
+  /**
+   * The panel is a child of the header rather than of .aio-nav-links, because
+   * `.aio-nav-links a` sets a 36px height that would crush every row inside
+   * it. So its left edge has to be measured from the trigger each time.
+   */
+  function openMega() {
+    const trigger = triggerRef.current;
+    if (trigger) setMegaLeft(trigger.offsetLeft);
+    setMegaOpen(true);
+  }
+
   function openAfterIntent() {
-    hoverTimer.current = setTimeout(() => setMegaOpen(true), 150);
+    hoverTimer.current = setTimeout(openMega, 150);
   }
   function cancelIntent() {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
   }
 
   return (
-    <header className="aio-nav">
+    <header
+      className="aio-nav"
+      onMouseLeave={() => {
+        cancelIntent();
+        setMegaOpen(false);
+      }}
+    >
       <Logo />
 
       <nav className="aio-nav-links" aria-label="Main">
-        <div
-          ref={megaRef}
-          style={{ position: "relative" }}
+        <Link
+          ref={triggerRef}
+          href="/pdf"
+          aria-current={pathname.startsWith("/pdf") ? "page" : undefined}
+          aria-expanded={megaOpen}
           onMouseEnter={openAfterIntent}
-          onMouseLeave={() => {
-            cancelIntent();
-            setMegaOpen(false);
+          onMouseLeave={cancelIntent}
+          onFocus={openMega}
+          onClick={(event) => {
+            // On a pointer, the first click opens the menu rather than
+            // jumping away; "View all PDF tools" is the way through.
+            if (!megaOpen && event.detail > 0) {
+              event.preventDefault();
+              openMega();
+            }
           }}
         >
-          <Link
-            href="/pdf"
-            aria-current={pathname.startsWith("/pdf") ? "page" : undefined}
-            aria-expanded={megaOpen}
-            onClick={(e) => {
-              // On a pointer, the first click opens the menu rather than
-              // jumping away; the "View all" row is the way through.
-              if (!megaOpen && e.detail > 0) {
-                e.preventDefault();
-                setMegaOpen(true);
-              }
-            }}
-          >
-            PDF tools
-            <Icon name="chevron" className="caret" />
-          </Link>
-
-          {megaOpen && (
-            <div
-              className="aio-mega"
-              role="menu"
-              style={{ position: "absolute", top: "calc(100% + 10px)", left: 0 }}
-            >
-              {MEGA.map((column) => (
-                <div className="aio-mega-col" key={column.heading}>
-                  <h6>{column.heading}</h6>
-                  {column.slugs.map((slug) => {
-                    const tool = TOOLS.find((t) => t.slug === slug);
-                    if (!tool) return null;
-                    return (
-                      <Link href={tool.href} key={slug} role="menuitem" onClick={closeMenus}>
-                        <span
-                          className={`aio-tile aio-tile--sm aio-tile--${tool.hue}`}
-                        >
-                          <Icon name={tool.icon} />
-                        </span>
-                        <div>
-                          <strong>{tool.name}</strong>
-                          <span>{tool.blurb}</span>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                  {column.more && (
-                    <Link href={column.more} role="menuitem" onClick={closeMenus}>
-                      <div>
-                        <strong style={{ color: "var(--brand-text)" }}>
-                          View all PDF tools &rarr;
-                        </strong>
-                      </div>
-                    </Link>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+          PDF tools
+          <Icon name="chevron" className="caret" />
+        </Link>
 
         {SECTIONS.filter((s) => s.id !== "pdf").map((section) => (
           <Link
@@ -162,27 +128,72 @@ export function Navbar() {
         </Link>
       </div>
 
-      {menuOpen && (
+      {megaOpen && (
         <div
-          className="aio-mega"
+          className="aio-mega aio-p-mega"
           role="menu"
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: "var(--space-6)",
-            right: "var(--space-6)",
-            width: "auto",
-            gridTemplateColumns: "1fr",
-          }}
+          style={{ left: megaLeft }}
+          onMouseEnter={cancelIntent}
         >
+          {MEGA.map((column) => (
+            <div className="aio-mega-col" key={column.heading}>
+              <h6>{column.heading}</h6>
+              {column.slugs.map((slug) => {
+                const tool = TOOLS.find((t) => t.slug === slug);
+                if (!tool) return null;
+                return (
+                  <Link
+                    href={tool.href}
+                    key={slug}
+                    role="menuitem"
+                    onClick={closeMenus}
+                  >
+                    <span className={`aio-tile aio-tile--sm aio-tile--${tool.hue}`}>
+                      <Icon name={tool.icon} />
+                    </span>
+                    <div>
+                      <strong>{tool.name}</strong>
+                      <span>{tool.blurb}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+              {column.more && (
+                <Link
+                  className="aio-p-mega-more"
+                  href={column.more}
+                  role="menuitem"
+                  onClick={closeMenus}
+                >
+                  View all PDF tools &rarr;
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {menuOpen && (
+        <div className="aio-mega aio-p-sheet" role="menu">
           <div className="aio-mega-col">
             {SECTIONS.map((section) => (
-              <Link href={section.href} key={section.id} role="menuitem" onClick={closeMenus}>
+              <Link
+                href={section.href}
+                key={section.id}
+                role="menuitem"
+                onClick={closeMenus}
+              >
                 <div>
                   <strong>{section.name}</strong>
                 </div>
               </Link>
             ))}
+            {/* Hidden from the bar itself at this width, so it belongs here. */}
+            <Link href="/dashboard" role="menuitem" onClick={closeMenus}>
+              <div>
+                <strong>Sign in</strong>
+              </div>
+            </Link>
           </div>
         </div>
       )}

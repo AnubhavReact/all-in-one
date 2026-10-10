@@ -744,3 +744,129 @@ body {
   height: 14px;
   transform: rotate(90deg);
 }
+
+/* ---------- Corrections to the handoff's component CSS ----------
+ *
+ * tokens.css and components.css are kept byte-identical to the handoff, so
+ * the two fixes the mega menu needs live here instead. Both are bugs in that
+ * component rather than design changes — it ships as markup in a reference
+ * file and was never rendered.
+ */
+
+/* 1. `.aio-mega a span` was written for the description line, but it also
+ *    matches the icon tile, which is a <span> too. At (0,1,2) it outranked
+ *    .aio-tile and .aio-tile--pdf, so every tile lost its centring and every
+ *    icon came out muted grey instead of its category hue. Adding the class
+ *    to the selector puts the tile back in front. */
+.aio-mega a span.aio-tile {
+  display: grid;
+  place-items: center;
+}
+.aio-mega a span.aio-tile--pdf {
+  color: var(--cat-pdf);
+}
+.aio-mega a span.aio-tile--career {
+  color: var(--cat-career);
+}
+.aio-mega a span.aio-tile--ai {
+  color: var(--cat-ai);
+}
+.aio-mega a span.aio-tile--tax {
+  color: var(--cat-tax);
+}
+
+/* 2. A row's text can run to two lines, so the tile must sit at the top of
+ *    it rather than float in the middle. */
+.aio-mega a {
+  align-items: flex-start;
+}
+.aio-mega a div {
+  min-width: 0;
+}
+
+/* The panel hangs from the header, which is the nearest positioned ancestor.
+ * Its left edge is set inline, measured from the trigger. */
+.aio-p-mega {
+  position: absolute;
+  top: calc(100% + 8px);
+  max-width: calc(100vw - var(--space-8) * 2);
+}
+
+/* The "View all" row is a plain link, with none of the icon-and-text layout
+ * the rows above it have. */
+.aio-p-mega-more {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brand-text);
+}
+
+/* The small-screen sheet spans the header instead of hanging off a trigger. */
+.aio-p-sheet {
+  position: absolute;
+  top: 100%;
+  left: var(--space-6);
+  right: var(--space-6);
+  width: auto;
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 480px) {
+  .aio-p-sheet {
+    left: var(--space-4);
+    right: var(--space-4);
+  }
+}
+
+/* ---------- Fixes found by looking at the rendered pages ---------- */
+
+/* A rail row is 38px tall, so a label that wraps breaks out of it. Long ones
+ * cut off instead, and the badge keeps its size. */
+.aio-side a {
+  white-space: nowrap;
+}
+.aio-side a .aio-badge {
+  flex: none;
+}
+
+/* Cards in these rows hold different amounts, and a stretched short card
+ * leaves a large empty box. Each sizes to its own content instead. */
+.aio-p-row2,
+.aio-p-row3 {
+  align-items: start;
+}
+
+/* Below 1024 the nav keeps the logo, the menu button and one primary action,
+ * as the handoff specifies. Sign in lives behind the menu. */
+@media (max-width: 1024px) {
+  .aio-nav {
+    gap: var(--space-3);
+  }
+  .aio-nav-actions .aio-btn--ghost {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .aio-nav {
+    gap: var(--space-2);
+  }
+  .aio-nav-actions {
+    gap: 6px;
+  }
+}
+
+/* Five pill tabs are wider than a phone. They scroll sideways rather than
+ * pushing the whole page wider. */
+@media (max-width: 768px) {
+  .aio-p-head .aio-tabs {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .aio-p-head .aio-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .aio-p-head .aio-tabs button {
+    flex: none;
+  }
+}

@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
   // `next dev` otherwise writes an AGENTS.md into this folder whenever it
   // detects an agent, which shows up as a stray uncommitted change.
   agentRules: false,
+
+  // The dev-only badge sits bottom-left, right on top of the sidebar's
+  // account card. It never ships, but it makes the app hard to look at while
+  // building it. Moved to the opposite corner, which is empty.
+  devIndicators: { position: "bottom-right" },
 };
 
 export default nextConfig;

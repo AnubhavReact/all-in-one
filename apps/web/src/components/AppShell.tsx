@@ -7,27 +7,25 @@ import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
+/**
+ * The rail only lists pages that exist. "All tools", "My files" and
+ * "Applications" are in the design but have nowhere to go yet, and two rows
+ * pointing at the same route would both light up as the current page.
+ */
 const GROUPS = [
   {
     heading: null,
-    items: [
-      { label: "Dashboard", href: "/dashboard", icon: "home" },
-      { label: "All tools", href: "/pdf", icon: "grid" },
-    ],
+    items: [{ label: "Dashboard", href: "/dashboard", icon: "home" }],
   },
   {
     heading: "Documents",
-    items: [
-      { label: "PDF tools", href: "/pdf", icon: "file", count: "5" },
-      { label: "My files", href: "/dashboard", icon: "download" },
-    ],
+    items: [{ label: "PDF tools", href: "/pdf", icon: "file", count: "5" }],
   },
   {
     heading: "Career",
     items: [
       { label: "Jobs", href: "/jobs", icon: "briefcase", soon: true },
-      { label: "Applications", href: "/jobs", icon: "clipboard", soon: true },
-      { label: "Resume builder", href: "/resume", icon: "resume", soon: true },
+      { label: "Resume", href: "/resume", icon: "resume", soon: true },
       { label: "ATS check", href: "/ats", icon: "target", soon: true },
     ],
   },
