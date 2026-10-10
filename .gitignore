@@ -6,6 +6,11 @@ build/
 .turbo/
 *.tsbuildinfo
 
+# Next regenerates this on every run and rewrites the path inside it
+# depending on whether `dev` or `build` ran last, so committing it means a
+# phantom diff every time. A fresh clone gets it back automatically.
+next-env.d.ts
+
 # Secrets — never commit these. Copy .env.example and fill it in locally.
 .env
 .env.local
