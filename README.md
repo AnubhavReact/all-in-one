@@ -30,6 +30,28 @@ npm test             # the PDF logic, tested against real PDFs
 The database is only needed for the parts that are not built yet, so you can
 run and work on the PDF tools without setting up Supabase at all.
 
+## The design
+
+The interface follows a design handoff: *dusk*, a dim slate rather than black,
+with one warm marigold accent marking the next step on each view. Light is the
+alternative theme and the toggle remembers the choice.
+
+`apps/web/src/styles/` holds it:
+
+- `tokens.css` — every colour, space, radius and font stack, for both themes.
+  Copied from the handoff and not edited.
+- `components.css` — every `aio-` component class. Also copied as it came.
+- `app.css` — what the handoff left to us: the page compositions and the
+  breakpoints (1024 the sidebar becomes a drawer, 768 grids go to two columns,
+  480 to one). Page-level classes are prefixed `aio-p-` so they cannot collide.
+
+Rules worth keeping: never hard-code a hex value, use `var(--token)`; one
+marigold primary button per view; category colours tint icon tiles only; and a
+tool that is not built shows *Coming soon* and is not a link.
+
+There is no Tailwind. The handoff ships complete CSS, and its reset fought the
+component classes.
+
 ## How this is laid out
 
 ```

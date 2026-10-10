@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { formatBytes } from "@aio/core";
-import { ToolShell } from "@/components/ui/ToolShell";
-import { FileDrop } from "@/components/ui/FileDrop";
-import { Button } from "@/components/ui/Button";
+import { ToolPage } from "@/components/ui/ToolPage";
+import { DropField } from "@/components/ui/DropField";
+import { Note } from "@/components/ui/Note";
+import { Icon } from "@/components/ui/Icon";
 import { mergeDocuments } from "@/lib/pdf";
 import { saveFile } from "@/lib/download";
 
@@ -35,7 +36,7 @@ export default function MergePdf() {
       setError(
         cause instanceof Error
           ? `One of these files could not be read: ${cause.message}`
-          : "One of these files could not be read.",
+          : "One of these files could not be read. Try opening it in a PDF reader first.",
       );
     } finally {
       setBusy(false);
@@ -43,15 +44,18 @@ export default function MergePdf() {
   }
 
   return (
-    <ToolShell
-      category="pdf"
+    <ToolPage
+      hue="pdf"
+      icon="merge"
+      section="PDF tools"
+      sectionHref="/pdf"
       title="Merge PDFs"
       blurb="Add two or more PDFs, put them in the order you want, and download one file."
     >
-      <FileDrop
+      <DropField
         accept="application/pdf"
         multiple
-        label="Add PDFs"
+        title="Add PDFs"
         hint="Drop them here, or add a few at a time"
         onFiles={(picked) =>
           setFiles((current) => [
@@ -62,45 +66,37 @@ export default function MergePdf() {
       />
 
       {files.length > 0 && (
-        <div className="space-y-4">
-          <ol className="space-y-2">
+        <>
+          <ol className="aio-p-files">
             {files.map((file, index) => (
-              <li
-                key={`${file.name}-${index}`}
-                className="flex items-center gap-3 rounded-tile border-2 border-rule bg-card px-3 py-2.5"
-              >
-                <span className="w-6 shrink-0 text-[13px] text-ink-40">
-                  {index + 1}
-                </span>
-                <span className="min-w-0 flex-1 truncate text-[14px] font-medium">
-                  {file.name}
-                </span>
-                <span className="shrink-0 text-[13px] text-ink-40">
-                  {formatBytes(file.size)}
-                </span>
-                <span className="flex shrink-0 gap-1">
+              <li className="aio-p-file" key={`${file.name}-${index}`}>
+                <span className="idx">{index + 1}</span>
+                <span className="name">{file.name}</span>
+                <span className="size">{formatBytes(file.size)}</span>
+                <span className="ops">
                   <button
+                    type="button"
+                    className="aio-btn aio-btn--ghost aio-btn--sm"
                     onClick={() => move(index, -1)}
                     disabled={index === 0}
                     aria-label={`Move ${file.name} up`}
-                    className="rounded-tile border-2 border-rule px-2 py-0.5 text-[13px] enabled:hover:border-ink disabled:opacity-30"
                   >
                     &uarr;
                   </button>
                   <button
+                    type="button"
+                    className="aio-btn aio-btn--ghost aio-btn--sm"
                     onClick={() => move(index, 1)}
                     disabled={index === files.length - 1}
                     aria-label={`Move ${file.name} down`}
-                    className="rounded-tile border-2 border-rule px-2 py-0.5 text-[13px] enabled:hover:border-ink disabled:opacity-30"
                   >
                     &darr;
                   </button>
                   <button
-                    onClick={() =>
-                      setFiles(files.filter((_, i) => i !== index))
-                    }
+                    type="button"
+                    className="aio-btn aio-btn--ghost aio-btn--sm"
+                    onClick={() => setFiles(files.filter((_, i) => i !== index))}
                     aria-label={`Remove ${file.name}`}
-                    className="rounded-tile border-2 border-rule px-2 py-0.5 text-[13px] hover:border-cat-pdf hover:text-cat-pdf"
                   >
                     &times;
                   </button>
@@ -109,27 +105,33 @@ export default function MergePdf() {
             ))}
           </ol>
 
-          {error && (
-            <p className="border-l-4 border-cat-pdf bg-card py-2 pl-4 text-[14px]">
-              {error}
-            </p>
-          )}
+          {error && <Note tone="error">{error}</Note>}
 
-          <div className="flex flex-wrap items-center gap-3">
-            <Button onClick={merge} disabled={files.length < 2 || busy}>
+          <div className="aio-p-actions">
+            <button
+              type="button"
+              className="aio-btn aio-btn--primary"
+              onClick={merge}
+              disabled={files.length < 2 || busy}
+            >
+              <Icon name="download" />
               {busy ? "Merging…" : `Merge ${files.length} PDFs`}
-            </Button>
-            <Button variant="quiet" onClick={() => setFiles([])}>
+            </button>
+            <button
+              type="button"
+              className="aio-btn aio-btn--secondary"
+              onClick={() => setFiles([])}
+            >
               Clear
-            </Button>
+            </button>
             {files.length < 2 && (
-              <span className="text-[13px] text-ink-40">
+              <span style={{ fontSize: 13, color: "var(--ink-faint)" }}>
                 Add one more to merge.
               </span>
             )}
           </div>
-        </div>
+        </>
       )}
-    </ToolShell>
+    </ToolPage>
   );
 }

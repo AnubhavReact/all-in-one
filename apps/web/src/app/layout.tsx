@@ -1,38 +1,58 @@
 import type { Metadata } from "next";
-import { Archivo } from "next/font/google";
-import "./globals.css";
-import { Sidebar } from "@/components/Sidebar";
+import { DM_Sans, JetBrains_Mono, Sora } from "next/font/google";
+import "@/styles/tokens.css";
+import "@/styles/components.css";
+import "@/styles/app.css";
 
-const archivo = Archivo({
-  variable: "--font-archivo",
+// The handoff loads these with a CSS @import. next/font self-hosts them
+// instead, which removes a render-blocking request and the flash of fallback
+// text. app.css points the --font-* tokens at these variables.
+const sora = Sora({
+  variable: "--font-sora",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "800"],
+  weight: ["600", "700"],
+  display: "swap",
+});
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+const jetBrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "All In One — document, career and tax tools",
+  title: "AllInOne — PDFs, jobs, resume, tax and AI in one place",
   description:
-    "Merge and split PDFs, build a resume, check its ATS score, search jobs and work out your income tax, in one place.",
+    "Edit PDFs, build an ATS-ready resume, find jobs, calculate tax and file your ITR, and chat with Claude, GPT and Gemini — all from one place.",
 };
+
+/**
+ * Applies the saved theme before the first paint. Without this the page
+ * renders in dusk and then jumps to light for anyone who chose light.
+ */
+const THEME_SCRIPT = `try{var t=localStorage.getItem('aio-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}`;
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={`${archivo.variable} min-h-dvh`}>
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
-        >
-          Skip to content
-        </a>
-        <div className="md:flex">
-          <Sidebar />
-          <main id="main" className="min-w-0 flex-1 px-5 py-8 md:px-10 md:py-12">
-            <div className="mx-auto max-w-5xl">{children}</div>
-          </main>
-        </div>
+    <html
+      lang="en"
+      data-theme="dusk"
+      className={`${sora.variable} ${dmSans.variable} ${jetBrainsMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
+      <body>
+        <div className="aio">{children}</div>
       </body>
     </html>
   );

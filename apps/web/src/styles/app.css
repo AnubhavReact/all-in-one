@@ -1,0 +1,746 @@
+/* AllInOne — page layouts and responsive rules.
+ *
+ * tokens.css and components.css are the handoff, copied as they came. This
+ * file holds what the handoff left to the implementation: the page
+ * compositions that lived in each mock's <style> block, and the breakpoints
+ * the mocks never had. Every value still comes from a token.
+ *
+ * Page-level classes are prefixed aio-p- so they cannot collide with the
+ * component classes.
+ */
+
+/* next/font loads the three families; point the token vars at them so
+ * nothing else has to know. */
+:root {
+  --font-display: var(--font-sora), "DM Sans", system-ui, sans-serif;
+  --font-sans: var(--font-dm-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, Menlo, monospace;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--surface-0);
+}
+
+.aio {
+  min-height: 100dvh;
+}
+
+/* ---------- Public page shell ---------- */
+.aio-p-sec {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-20) var(--space-8);
+}
+.aio-p-sec--tight {
+  padding-top: 0;
+}
+.aio-p-sec--flush {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* ---------- Hero ---------- */
+.aio-p-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 56px;
+  align-items: center;
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+.aio-p-hero > div:not(.aio-p-herobg) {
+  position: relative;
+}
+.aio-p-herobg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(var(--line) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(180deg, #000 0, transparent 85%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0, transparent 85%);
+}
+.aio-p-hero .aio-h1 {
+  margin: 18px 0;
+}
+.aio-p-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: 28px;
+}
+.aio-p-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 28px;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+.aio-p-trust span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.aio-p-trust svg.i {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+}
+
+/* ---------- Drop card ---------- */
+.aio-p-dropcard {
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+}
+.aio-p-dropcard .aio-drop {
+  transition: border-color 0.15s, background 0.15s;
+}
+.aio-p-dropcard .aio-drop[data-over="true"] {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+.aio-p-droptitle {
+  font: 600 18px/24px var(--font-display);
+}
+.aio-p-droplink {
+  color: var(--brand-text);
+  font-weight: 600;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.aio-p-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.aio-p-quick a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 34px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+.aio-p-quick a:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+.aio-p-quick svg.i {
+  width: 15px;
+  height: 15px;
+}
+
+/* ---------- Stat strip ---------- */
+.aio-p-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.aio-p-strip div {
+  padding: var(--space-6) var(--space-8);
+  border-left: 1px solid var(--line);
+}
+.aio-p-strip div:first-child {
+  border-left: 0;
+}
+.aio-p-strip b {
+  display: block;
+  font: 600 28px/32px var(--font-mono);
+  letter-spacing: -0.02em;
+}
+.aio-p-strip span {
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+/* ---------- Section heads and grids ---------- */
+.aio-p-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+}
+.aio-p-head .aio-h2 {
+  margin-top: 10px;
+}
+.aio-p-grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+.aio-p-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  align-items: stretch;
+}
+.aio-p-pad40 {
+  padding: 40px;
+}
+
+/* ---------- Feature list ---------- */
+.aio-p-feat {
+  display: grid;
+  gap: 14px;
+  margin: var(--space-6) 0 28px;
+  padding: 0;
+  list-style: none;
+}
+.aio-p-feat li {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  font-size: 15px;
+  color: var(--ink-muted);
+}
+.aio-p-feat li svg.i {
+  color: var(--accent);
+  margin-top: 3px;
+  flex: none;
+}
+.aio-p-feat li b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- Job row ---------- */
+.aio-p-job {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.aio-p-job:first-of-type {
+  border-top: 0;
+}
+.aio-p-job .logo {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  font: 700 15px/1 var(--font-display);
+}
+.aio-p-job .m {
+  flex: 1;
+  min-width: 0;
+}
+.aio-p-job strong {
+  display: block;
+  font-size: 15px;
+  line-height: 20px;
+}
+.aio-p-job .sub {
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+.aio-p-job .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.aio-p-job .pct {
+  font: 600 13px/1 var(--font-mono);
+  color: var(--success);
+}
+.aio-p-job .pct--mid {
+  color: var(--warning);
+}
+
+/* ---------- Regime compare ---------- */
+.aio-p-regime {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.aio-p-regime div {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface-sunken);
+}
+.aio-p-regime div.win {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.aio-p-regime div.win span {
+  color: var(--accent);
+}
+.aio-p-regime span {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+.aio-p-regime b {
+  display: block;
+  font: 600 22px/28px var(--font-mono);
+  margin-top: 4px;
+}
+
+/* ---------- Metric rows (ATS panel) ---------- */
+.aio-p-metric {
+  display: grid;
+  gap: 6px;
+}
+.aio-p-metric .top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+.aio-p-metric .top b {
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+
+/* ---------- CTA band ---------- */
+.aio-p-cta {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding: 48px 56px;
+  border-radius: 24px;
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+}
+.aio-p-cta > div {
+  position: relative;
+}
+.aio-p-cta .aio-btn {
+  position: relative;
+  margin-right: 200px;
+}
+.aio-p-ctablocks {
+  position: absolute;
+  right: -20px;
+  top: -20px;
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  gap: 10px;
+  opacity: 0.9;
+}
+.aio-p-ctablocks i {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+}
+.aio-p-ctablocks i.b {
+  background: var(--brand);
+}
+.aio-p-ctablocks i.a {
+  background: var(--accent);
+}
+.aio-p-ctablocks i.p {
+  background: var(--cat-pdf);
+}
+
+/* ---------- App shell ---------- */
+.aio-p-app {
+  display: grid;
+  grid-template-columns: 248px 1fr;
+  min-height: 100dvh;
+}
+.aio-p-app .aio-side {
+  width: auto;
+}
+.aio-p-main {
+  min-width: 0;
+}
+.aio-p-content {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-8);
+}
+.aio-p-greet {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+.aio-p-greet p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+.aio-p-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+.aio-p-row2 {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: var(--space-6);
+}
+.aio-p-row3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+.aio-p-qt {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.aio-p-qt a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 600;
+}
+.aio-p-qt a:hover {
+  background: var(--surface-2);
+}
+
+/* ---------- Tool page (the working PDF tools) ---------- */
+.aio-p-tool {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.aio-p-toolhead {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+.aio-p-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+.aio-p-crumb:hover {
+  color: var(--ink);
+}
+.aio-p-stack {
+  display: grid;
+  gap: var(--space-4);
+}
+.aio-p-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.aio-p-note {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface-sunken);
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--ink-muted);
+}
+.aio-p-note--error {
+  border-color: var(--danger);
+  color: var(--ink);
+}
+.aio-p-note svg.i {
+  flex: none;
+  margin-top: 2px;
+}
+.aio-p-note--error svg.i {
+  color: var(--danger);
+}
+
+/* File rows inside a tool */
+.aio-p-files {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.aio-p-file {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 10px var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface-1);
+}
+.aio-p-file .idx {
+  width: 20px;
+  flex: none;
+  font: 500 12px/1 var(--font-mono);
+  color: var(--ink-faint);
+}
+.aio-p-file .name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 500;
+}
+.aio-p-file .size {
+  flex: none;
+  font: 500 12px/18px var(--font-mono);
+  color: var(--ink-faint);
+}
+.aio-p-file .ops {
+  display: flex;
+  flex: none;
+  gap: 4px;
+}
+
+/* Page thumbnails */
+.aio-p-pages {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.aio-p-page {
+  display: grid;
+  gap: var(--space-2);
+  padding: 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface-1);
+}
+.aio-p-page--off {
+  border-style: dashed;
+  opacity: 0.55;
+}
+.aio-p-page .shot {
+  display: grid;
+  place-items: center;
+  height: 150px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+}
+.aio-p-page .shot img {
+  max-width: 100%;
+  max-height: 100%;
+  transition: transform 0.15s;
+}
+.aio-p-page .bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+.aio-p-page .num {
+  font: 500 12px/1 var(--font-mono);
+  color: var(--ink-faint);
+}
+
+/* ---------- Mobile nav pieces, hidden on desktop ---------- */
+.aio-p-menubtn,
+.aio-p-scrim,
+.aio-p-drawerclose {
+  display: none;
+}
+
+/* ---------- 1024: sidebar becomes a drawer, nav links collapse ---------- */
+@media (max-width: 1024px) {
+  .aio-p-sec {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
+  .aio-nav,
+  .aio-topbar {
+    padding: 0 var(--space-6);
+  }
+  .aio-nav-links {
+    display: none;
+  }
+  .aio-p-menubtn {
+    display: grid;
+  }
+  .aio-p-hero {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    padding-top: var(--space-12);
+  }
+  .aio-p-grid4 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .aio-p-row2,
+  .aio-p-row3 {
+    grid-template-columns: 1fr;
+  }
+  .aio-p-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .aio-p-cta .aio-btn {
+    margin-right: 0;
+  }
+  .aio-p-ctablocks {
+    display: none;
+  }
+
+  /* The rail slides over the content instead of taking a column. */
+  .aio-p-app {
+    grid-template-columns: 1fr;
+  }
+  .aio-p-app .aio-side {
+    position: fixed;
+    z-index: 40;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 248px;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    overflow-y: auto;
+  }
+  .aio-p-app[data-drawer="open"] .aio-side {
+    transform: none;
+  }
+  .aio-p-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    border: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .aio-p-drawerclose {
+    display: grid;
+  }
+}
+
+/* ---------- 768: grids drop to two columns ---------- */
+@media (max-width: 768px) {
+  .aio-p-sec {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-12);
+  }
+  .aio-h1 {
+    font-size: 38px;
+    line-height: 44px;
+  }
+  .aio-h2 {
+    font-size: 30px;
+    line-height: 36px;
+  }
+  .aio-p-grid4,
+  .aio-p-pages {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .aio-p-split {
+    grid-template-columns: 1fr;
+  }
+  .aio-p-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .aio-p-strip div:nth-child(3) {
+    border-left: 0;
+  }
+  .aio-p-strip div:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+  .aio-p-pad40 {
+    padding: var(--space-6);
+  }
+  .aio-p-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-8);
+  }
+  .aio-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .aio-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .aio-p-content,
+  .aio-p-tool {
+    padding: var(--space-6);
+  }
+}
+
+/* ---------- 480: one column, 16px gutter ---------- */
+@media (max-width: 480px) {
+  .aio-p-sec,
+  .aio-nav,
+  .aio-topbar,
+  .aio-p-content,
+  .aio-p-tool,
+  .aio-footer {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+  .aio-h1 {
+    font-size: 32px;
+    line-height: 38px;
+  }
+  .aio-p-grid4,
+  .aio-p-pages,
+  .aio-p-strip,
+  .aio-p-stats,
+  .aio-p-qt,
+  .aio-p-regime,
+  .aio-footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .aio-p-strip div {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: var(--space-4);
+  }
+  .aio-p-strip div:first-child {
+    border-top: 0;
+  }
+  .aio-nav-search {
+    display: none;
+  }
+  .aio-p-ctas .aio-btn,
+  .aio-p-actions .aio-btn {
+    width: 100%;
+  }
+}
+
+/* The icon set has no left-pointing chevron, so the breadcrumb turns the
+ * down one a quarter turn. */
+.aio-p-crumb-caret {
+  width: 14px;
+  height: 14px;
+  transform: rotate(90deg);
+}
