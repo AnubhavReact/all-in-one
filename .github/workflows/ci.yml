@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A new push to the same branch cancels the run still going for the old one.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Build, test and lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` installs exactly what package-lock.json says, which is what
+      # makes a CI run reproducible.
+      - run: npm ci
+
+      # Builds packages/core, generates the Prisma client and builds the site.
+      # None of it touches a database, so no secrets are needed here.
+      - run: npm run build
+
+      - run: npm test
+
+      - run: npm run lint
