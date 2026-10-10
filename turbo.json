@@ -37,6 +37,19 @@
       "dependsOn": [
         "^build"
       ]
+    },
+    "@aio/db#build": {
+      "inputs": [
+        "prisma/schema.prisma",
+        "prisma.config.ts"
+      ],
+      "outputs": [
+        "src/generated/**"
+      ]
+    },
+    "@aio/mobile#build": {
+      "cache": false,
+      "outputs": []
     }
   }
 }

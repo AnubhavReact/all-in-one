@@ -1,8 +1,8 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "./generated/client.js";
+import { PrismaClient } from "./generated/client";
 
-export * from "./generated/client.js";
-export * from "./generated/enums.js";
+export * from "./generated/client";
+export * from "./generated/enums";
 
 /**
  * In development Next.js reloads modules on every edit. Without this cache we

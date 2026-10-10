@@ -7,14 +7,16 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev",
-    "dev:web": "turbo run dev --filter=@aio/web",
     "build": "turbo run build",
-    "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
+    "db:generate": "npm run build --workspace=@aio/db",
     "db:push": "npm run db:push --workspace=@aio/db",
     "db:studio": "npm run db:studio --workspace=@aio/db",
-    "test": "turbo run test"
+    "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=@aio/web",
+    "lint": "turbo run lint",
+    "postinstall": "npm run db:generate",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
     "turbo": "2.11.7",
