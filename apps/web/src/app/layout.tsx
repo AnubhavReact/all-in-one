@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, JetBrains_Mono, Sora } from "next/font/google";
+import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "@/styles/tokens.css";
 import "@/styles/components.css";
 import "@/styles/app.css";
@@ -7,14 +7,14 @@ import "@/styles/app.css";
 // The handoff loads these with a CSS @import. next/font self-hosts them
 // instead, which removes a render-blocking request and the flash of fallback
 // text. app.css points the --font-* tokens at these variables.
-const sora = Sora({
-  variable: "--font-sora",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["600", "700", "800"],
   display: "swap",
 });
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
@@ -29,7 +29,7 @@ const jetBrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "AllInOne — PDFs, jobs, resume, tax and AI in one place",
   description:
-    "Edit PDFs, build an ATS-ready resume, find jobs, calculate tax and file your ITR, and chat with Claude, GPT and Gemini — all from one place.",
+    "Edit PDFs, build an ATS-ready resume, find jobs, compare tax regimes and get ITR help — just ask, or drop a file.",
 };
 
 /**
@@ -45,7 +45,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="dusk"
-      className={`${sora.variable} ${dmSans.variable} ${jetBrainsMono.variable}`}
+      className={`${jakarta.variable} ${inter.variable} ${jetBrainsMono.variable}`}
       suppressHydrationWarning
     >
       <head>

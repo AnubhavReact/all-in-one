@@ -229,3 +229,51 @@ export function toolsAccepting(extension: string): Tool[] {
     (a, b) => Number(b.status !== "soon") - Number(a.status !== "soon"),
   );
 }
+
+/**
+ * Words people type that a tool's own name does not contain. "combine my
+ * pdfs" should find Merge, and "itr" should find the tax tool.
+ */
+const ALIASES: Record<string, readonly string[]> = {
+  merge: ["combine", "join", "together", "append", "one file"],
+  split: ["extract", "separate", "take out", "range", "pull"],
+  organise: ["rotate", "sideways", "turn", "delete page", "remove page", "order"],
+  "to-images": ["jpg", "jpeg", "png", "picture", "screenshot", "export image"],
+  "from-images": ["photo", "scan", "camera", "jpg to pdf", "picture to pdf"],
+  jobs: ["vacancy", "opening", "hiring", "apply", "work"],
+  resume: ["cv", "curriculum vitae", "biodata"],
+  ats: ["score", "keyword", "shortlist", "match", "applicant tracking"],
+  ai: ["chatgpt", "gpt", "claude", "gemini", "chat", "ask"],
+  tax: ["itr", "income tax", "regime", "80c", "form 16", "refund", "deduction"],
+};
+
+/**
+ * Ranks tools against something typed into the ask bar or the ⌘K palette.
+ * A name match beats an alias, which beats the blurb; built tools beat ones
+ * that are only coming soon.
+ */
+export function searchTools(query: string, limit = 6): Tool[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+
+  const scored = TOOLS.map((tool) => {
+    const name = tool.name.toLowerCase();
+    let score = 0;
+
+    if (name === q) score = 100;
+    else if (name.startsWith(q)) score = 80;
+    else if (name.includes(q)) score = 60;
+    else if ((ALIASES[tool.slug] ?? []).some((a) => q.includes(a) || a.includes(q)))
+      score = 40;
+    else if (tool.blurb.toLowerCase().includes(q)) score = 20;
+    else if (q.split(/\s+/).some((word) => word.length > 2 && name.includes(word)))
+      score = 10;
+
+    if (score > 0 && tool.status !== "soon") score += 5;
+    return { tool, score };
+  })
+    .filter((row) => row.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  return scored.slice(0, limit).map((row) => row.tool);
+}

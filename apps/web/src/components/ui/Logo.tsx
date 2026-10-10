@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/** The working mark: four 9px squares, the first marigold, then the wordmark. */
+/** The working mark: four 9px squares, the first gradient-filled, then the wordmark. */
 export function Logo({
   href = "/",
   style,

@@ -1,128 +1,133 @@
 import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
-import { HeroDrop } from "@/components/HeroDrop";
+import { AskBar, type AskChip } from "@/components/ai/AskBar";
 import { ToolGrid } from "@/components/ToolGrid";
 
+/** The hero's shortcuts. Every one of these goes somewhere that works. */
+const CHIPS: readonly AskChip[] = [
+  { label: "Merge PDF", icon: "merge", href: "/pdf/merge" },
+  { label: "Split PDF", icon: "split", href: "/pdf/split" },
+  { label: "PDF to images", icon: "image", href: "/pdf/to-images" },
+  { label: "Check ATS score", icon: "target", href: "/ats" },
+  { label: "Old vs new regime", icon: "calc", href: "/tax" },
+];
+
 const STRIP = [
-  { value: "10", label: "tools in one place" },
-  { value: "0", label: "files uploaded to our servers" },
-  { value: "3", label: "AI models, one chat window" },
-  { value: "₹0", label: "to start — no card needed" },
+  { value: "5", label: "PDF tools working today" },
+  { value: "0 MB", label: "of your files uploaded" },
+  { value: "3", label: "AI models — Claude, GPT, Gemini" },
+  { value: "₹0", label: "to start" },
+];
+
+/** The copilot section's three claims, each true of the design as specified. */
+const COPILOT = [
+  {
+    icon: "target",
+    title: "Knows where you are",
+    detail:
+      "On the resume page it works on your resume. On the ITR page it explains deductions.",
+  },
+  {
+    icon: "zap",
+    title: "Does it, with your OK",
+    detail:
+      "It merges files, fills forms and edits resumes — and shows every change before applying it.",
+  },
+  {
+    icon: "chat",
+    title: "Your choice of model",
+    detail: "Switch between Claude, GPT and Gemini in the same chat.",
+  },
 ];
 
 export default function Home() {
   return (
     <>
-      <section className="aio-p-sec aio-p-hero">
+      <section className="aio-p-hero">
+        <div className="aio-glow" aria-hidden />
         <div className="aio-p-herobg" aria-hidden />
-        <div>
-          <span className="aio-eyebrow">Your paperwork, in one window</span>
+        <div className="aio-p-heroin">
+          <Link className="aio-pill" href="/pdf">
+            <b>LIVE</b>
+            Five PDF tools, running in this tab
+            <Icon name="arrow" />
+          </Link>
+
           <h1 className="aio-h1">
-            Drop a file.
+            Every tool you need.
             <br />
-            We&rsquo;ll find <span className="aio-mark">the tool.</span>
+            <span className="aio-grad-text">One AI that knows them all.</span>
           </h1>
+
           <p className="aio-lead">
-            Edit PDFs, build an ATS-ready resume, find jobs, calculate tax and
-            file your ITR, and chat with Claude, GPT and Gemini — all from one
-            place.
+            Edit PDFs, build an ATS-ready resume, find jobs, compare tax
+            regimes and get ITR help — just ask, or drop a file.
           </p>
-          <div className="aio-p-ctas">
-            <Link className="aio-btn aio-btn--primary aio-btn--lg" href="/pdf">
-              Start with the PDF tools
-            </Link>
-            <Link
-              className="aio-btn aio-btn--secondary aio-btn--lg"
-              href="/dashboard"
-            >
-              <Icon name="grid" />
-              See the dashboard
-            </Link>
-          </div>
+
+          <AskBar
+            placeholder="Try “merge my rent PDFs” or “split a PDF”"
+            chips={CHIPS}
+          />
+
           <div className="aio-p-trust">
             <span>
               <Icon name="shield" />
-              Files stay on your device
+              PDFs never leave your device
             </span>
             <span>
               <Icon name="check" />
-              No sign-up for PDF tools
+              Free to start, no card
             </span>
             <span>
               <Icon name="check" />
-              Made in India
+              Made in India, for India
             </span>
           </div>
         </div>
-
-        <HeroDrop />
-      </section>
-
-      <div className="aio-p-sec aio-p-sec--flush">
-        <div className="aio-p-strip">
-          {STRIP.map((item) => (
-            <div key={item.label}>
-              <b>{item.value}</b>
-              <span>{item.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <section className="aio-p-sec">
-        <ToolGrid />
       </section>
 
       <section className="aio-p-sec aio-p-sec--tight">
-        <div className="aio-p-split">
-          <div className="aio-card aio-p-pad40">
-            <span className="aio-eyebrow" style={{ color: "var(--accent)" }}>
-              Career toolkit
+        <div className="aio-p-bento">
+          <div className="aio-p-b aio-p-b--pdf">
+            <span className="aio-tile aio-tile--pdf">
+              <Icon name="file" />
             </span>
-            <h2 className="aio-h2" style={{ marginTop: 10 }}>
-              From resume to offer letter.
-            </h2>
-            <ul className="aio-p-feat">
-              <li>
-                <Icon name="check" />
-                <span>
-                  <b>Build</b> a clean, ATS-readable resume from templates.
-                </span>
-              </li>
-              <li>
-                <Icon name="check" />
-                <span>
-                  <b>Score</b> it against any job description and fix gaps.
-                </span>
-              </li>
-              <li>
-                <Icon name="check" />
-                <span>
-                  <b>Apply</b> and track every application in one board.
-                </span>
-              </li>
-            </ul>
-            <p className="aio-p-note">
-              <Icon name="clock" />
-              <span>
-                Not built yet. Listings will come from feeds that permit it,
-                such as Adzuna and RemoteOK — LinkedIn and Naukri forbid
-                scraping.
-              </span>
+            <h3>PDF tools that run in your browser</h3>
+            <p>
+              Merge, split, rotate and convert — no uploads, no waiting. These
+              five are built and working now.
             </p>
+            <div className="aio-p-pdfdemo" aria-hidden>
+              <div className="f">
+                <div className="pg" />
+                <span>agreement.pdf</span>
+              </div>
+              <div className="f">
+                <div className="pg" />
+                <span>receipt.jpg</span>
+              </div>
+              <div className="arrow">
+                <Icon name="arrow" />
+              </div>
+              <div className="f f--out">
+                <div className="pg" />
+                <span>merged.pdf</span>
+              </div>
+            </div>
           </div>
 
-          <div
-            className="aio-card aio-p-pad40"
-            style={{ display: "grid", gap: 24, alignContent: "start" }}
-          >
-            <div className="aio-card-head" style={{ margin: 0 }}>
-              <h3>ATS score &middot; how it will look</h3>
+          <div className="aio-p-b aio-p-b--ats">
+            <div className="aio-p-bglow" aria-hidden />
+            <div className="aio-p-b-top">
+              <span className="aio-tile aio-tile--career">
+                <Icon name="target" />
+              </span>
               <span className="aio-badge aio-badge--soon">Coming soon</span>
             </div>
-
-            <div style={{ display: "flex", gap: 28, alignItems: "center", flexWrap: "wrap" }}>
-              <div className="aio-ring" style={{ width: 150, height: 150 }}>
+            <h3>ATS score in 10 seconds</h3>
+            <p>Match your resume to any job description.</p>
+            <div className="aio-p-atsdemo" aria-hidden>
+              <div className="aio-ring">
                 <svg viewBox="0 0 120 120">
                   <circle className="track" cx="60" cy="60" r="50" />
                   <circle
@@ -135,191 +140,271 @@ export default function Home() {
                   />
                 </svg>
                 <div className="aio-ring-num">
-                  82<span>Strong match</span>
+                  82<span>Strong</span>
                 </div>
               </div>
-
-              <div style={{ display: "grid", gap: 14, flex: 1, minWidth: 180 }}>
-                <div className="aio-p-metric">
-                  <div className="top">
-                    Keywords <b>18/22</b>
-                  </div>
-                  <div className="aio-progress">
-                    <i style={{ width: "82%" }} />
-                  </div>
+              <div className="col">
+                <span>Missing keywords</span>
+                <div className="kw">
+                  {["Jest", "CI/CD", "Fastlane"].map((word) => (
+                    <span className="aio-badge aio-badge--plain" key={word}>
+                      {word}
+                    </span>
+                  ))}
                 </div>
-                <div className="aio-p-metric">
-                  <div className="top">
-                    Formatting <b>95</b>
-                  </div>
-                  <div className="aio-progress">
-                    <i style={{ width: "95%" }} />
-                  </div>
-                </div>
-                <div className="aio-p-metric">
-                  <div className="top">
-                    Experience fit <b>64</b>
-                  </div>
-                  <div className="aio-progress aio-progress--brand">
-                    <i style={{ width: "64%" }} />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "var(--ink-muted)",
-                  marginBottom: 8,
-                }}
-              >
-                Missing keywords
-              </div>
-              <div className="aio-row">
-                {["Redux Toolkit", "CI/CD", "Jest", "Fastlane"].map((word) => (
-                  <span className="aio-badge aio-badge--plain" key={word}>
-                    {word}
-                  </span>
-                ))}
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <section className="aio-p-sec aio-p-sec--tight">
-        <div className="aio-p-split">
-          <div className="aio-card aio-p-pad40">
-            <span className="aio-eyebrow" style={{ color: "var(--cat-tax)" }}>
-              Tax &amp; ITR
-            </span>
-            <h2 className="aio-h3" style={{ margin: "10px 0 6px" }}>
-              File your ITR without the stress.
-            </h2>
-            <p
-              className="aio-lead"
-              style={{ fontSize: 15, lineHeight: "24px" }}
-            >
-              Read Form 16 on your device, compare the old and new regimes, and
-              see exactly where the tax comes from.
+          <div className="aio-p-b aio-p-b--ai">
+            <div className="aio-p-b-top">
+              <span className="aio-tile aio-tile--brand">
+                <Icon name="ai" />
+              </span>
+              <span className="aio-badge aio-badge--soon">Needs your key</span>
+            </div>
+            <h3>An assistant that actually does the work</h3>
+            <p>
+              Ask in plain words. It picks the tool, fills it in, and asks
+              before it changes anything.
             </p>
+            <div className="aio-p-thread" aria-hidden>
+              <div className="aio-bubble aio-bubble--me">
+                Combine my Form 16 and rent receipts into one PDF
+              </div>
+              <div className="aio-bubble aio-bubble--ai">
+                Done — 3 files merged in your browser.
+              </div>
+              <div className="aio-action">
+                <div className="aio-action-row">
+                  <span className="aio-tile aio-tile--sm aio-tile--pdf">
+                    <Icon name="merge" />
+                  </span>
+                  <div className="m">
+                    <strong>ITR_docs_merged.pdf</strong>
+                    <span>14 pages &middot; 2.4 MB</span>
+                  </div>
+                  <span className="aio-btn aio-btn--secondary aio-btn--sm">
+                    <Icon name="download" />
+                    Save
+                  </span>
+                </div>
+              </div>
+              <div className="aio-bubble aio-bubble--me">
+                Which ITR form should I file?
+              </div>
+              <div className="aio-bubble aio-bubble--ai">
+                With salary and one rented house, <b>ITR-1 (Sahaj)</b>. Start
+                it with your Form 16?
+              </div>
+              <div className="aio-suggest">
+                <span className="aio-chip aio-chip--active">
+                  Yes, start ITR-1
+                </span>
+                <span className="aio-chip">Compare regimes first</span>
+              </div>
+            </div>
+          </div>
 
-            <div className="aio-p-regime">
+          <div className="aio-p-b aio-p-b--tax">
+            <div className="aio-p-b-top">
+              <span className="aio-tile aio-tile--tax">
+                <Icon name="rupee" />
+              </span>
+              <span className="aio-badge aio-badge--soon">Coming soon</span>
+            </div>
+            <h3>Tax &amp; ITR, simplified</h3>
+            <p>See which regime saves more, slab by slab.</p>
+            <div className="aio-p-regime" aria-hidden>
               <div>
                 <span>Old regime</span>
                 <b>&#8377;80,600</b>
               </div>
               <div className="win">
-                <span>New regime &middot; saves &#8377;18,200</span>
+                <span>New &middot; saves &#8377;18.2k</span>
                 <b>&#8377;62,400</b>
               </div>
             </div>
-
-            <div className="aio-steps" style={{ marginTop: 24 }}>
-              <div className="aio-step aio-step--now">
-                <div>
-                  <strong>Read Form 16 &amp; AIS</strong>
-                  <span>On your device, like the PDF tools</span>
-                </div>
-              </div>
-              <div className="aio-step">
-                <div>
-                  <strong>Review deductions</strong>
-                  <span>80C, 80D, HRA</span>
-                </div>
-              </div>
-              <div className="aio-step">
-                <div>
-                  <strong>Compare regimes</strong>
-                  <span>Slab by slab, with the working shown</span>
-                </div>
-              </div>
-            </div>
-
-            <p className="aio-p-note" style={{ marginTop: 20 }}>
-              <Icon name="shield" />
-              <span>
-                Filing on your behalf needs an ERI licence from the Income Tax
-                Department. This works out what you owe; you file on the
-                government portal.
-              </span>
-            </p>
           </div>
 
-          <div
-            className="aio-card aio-p-pad40"
-            style={{ display: "grid", alignContent: "start", gap: 16 }}
-          >
-            <span className="aio-eyebrow" style={{ color: "var(--cat-ai)" }}>
-              AI chat
-            </span>
-            <h2 className="aio-h3" style={{ margin: 0 }}>
-              Claude, GPT and Gemini. One window.
-            </h2>
-
-            <div className="aio-models" style={{ justifySelf: "start" }}>
-              <button type="button" aria-pressed="true">
-                <i />
-                Claude
-              </button>
-              <button type="button" aria-pressed="false">
-                GPT
-              </button>
-              <button type="button" aria-pressed="false">
-                Gemini
-              </button>
+          <div className="aio-p-b aio-p-b--jobs">
+            <div className="aio-p-b-top">
+              <span className="aio-tile aio-tile--career">
+                <Icon name="briefcase" />
+              </span>
+              <span className="aio-badge aio-badge--soon">Coming soon</span>
             </div>
+            <h3>Jobs that fit</h3>
+            <p>Ranked by your resume.</p>
+            <div className="aio-p-jobmini" aria-hidden>
+              <div>
+                Sr. React Native Developer <b>92%</b>
+              </div>
+              <div>
+                Mobile Engineer II <b>86%</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <div style={{ display: "grid", gap: 10 }}>
+      <div className="aio-p-sec aio-p-sec--flush">
+        <div className="aio-p-strip">
+          {STRIP.map((item) => (
+            <div key={item.label}>
+              <b className="aio-grad-text">{item.value}</b>
+              <span>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <section className="aio-p-sec">
+        <ToolGrid />
+      </section>
+
+      <section className="aio-p-sec aio-p-sec--tight">
+        <div className="aio-p-copilot">
+          <div>
+            <span className="aio-eyebrow">AllInOne AI</span>
+            <h2 className="aio-h2" style={{ marginTop: 10 }}>
+              Your copilot for{" "}
+              <span className="aio-grad-text">paperwork.</span>
+            </h2>
+            <ul className="aio-p-feat">
+              {COPILOT.map((row) => (
+                <li key={row.title}>
+                  <span className="aio-tile aio-tile--brand">
+                    <Icon name={row.icon} />
+                  </span>
+                  <div>
+                    <strong>{row.title}</strong>
+                    <span className="d">{row.detail}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <Link className="aio-btn aio-btn--primary aio-btn--lg" href="/ai">
+              <Icon name="ai" />
+              See how the AI hub will work
+            </Link>
+          </div>
+
+          {/* A picture of the panel, labelled as one. The working panel is the
+              "Ask AI" launcher in the corner. */}
+          <section className="aio-assist" aria-label="AllInOne AI preview">
+            <header className="aio-assist-head">
+              <span className="aio-assist-avatar">
+                <Icon name="ai" />
+              </span>
+              <div className="t">
+                <strong>AllInOne AI</strong>
+                <span className="aio-p-offline">
+                  <i />
+                  Preview &middot; not connected yet
+                </span>
+              </div>
+              <span className="aio-badge aio-badge--soon">Soon</span>
+            </header>
+            <div className="aio-assist-body" aria-hidden>
+              <div className="aio-ctx">
+                <Icon name="target" />
+                You&rsquo;re on <b>ATS check</b> &middot; resume v4 attached
+              </div>
               <div className="aio-bubble aio-bubble--me">
-                Summarise this rent agreement PDF and list what I should check.
+                Why is my experience score only 64?
               </div>
               <div className="aio-bubble aio-bubble--ai">
-                It&rsquo;s an 11-month agreement starting 1 Nov. Check three
-                things: the lock-in period (6 months), the notice period, and
-                who pays maintenance…
+                The job description asks for <b>CI/CD</b> and <b>Jest</b>. Your
+                EAS build pipeline counts as CI/CD — let&rsquo;s say it
+                clearly.
               </div>
-              <div className="aio-bubble aio-bubble--me">
-                Now draft a reply asking for a 2-month notice period.
+              <div className="aio-action">
+                <div className="aio-action-row">
+                  <span className="aio-tile aio-tile--sm aio-tile--career">
+                    <Icon name="resume" />
+                  </span>
+                  <div className="m">
+                    <strong>Add 2 bullet points</strong>
+                    <span>Opens Resume builder, changes highlighted</span>
+                  </div>
+                </div>
+                <div className="aio-row">
+                  <span className="aio-btn aio-btn--primary aio-btn--sm">
+                    <Icon name="zap" />
+                    Apply
+                  </span>
+                  <span className="aio-btn aio-btn--ghost aio-btn--sm">
+                    Show me first
+                  </span>
+                </div>
               </div>
             </div>
+            <footer className="aio-assist-foot">
+              <div className="note">
+                AI can make mistakes. Tax answers will carry an expert review
+                before anything is filed.
+              </div>
+            </footer>
+          </section>
+        </div>
+      </section>
 
-            <p className="aio-p-note">
-              <Icon name="lock" />
-              <span>
-                ChatGPT and Gemini block being embedded in another site, so this
-                will use their APIs with your own key. The key stays on your
-                device.
-              </span>
-            </p>
-          </div>
+      <section className="aio-p-sec aio-p-sec--tight">
+        <span className="aio-eyebrow">Honest about what&rsquo;s built</span>
+        <h2 className="aio-h3" style={{ margin: "10px 0 20px" }}>
+          Three things this can&rsquo;t do yet, and why.
+        </h2>
+        <div className="aio-p-split aio-p-split--3">
+          <p className="aio-p-note">
+            <Icon name="briefcase" />
+            <span>
+              <b>Jobs</b> will come from feeds that allow it, such as Adzuna and
+              RemoteOK. LinkedIn and Naukri forbid scraping, so they are out.
+            </span>
+          </p>
+          <p className="aio-p-note">
+            <Icon name="chat" />
+            <span>
+              <b>ChatGPT and Gemini</b> block being embedded in another site, so
+              the AI hub calls their APIs with your own key. The key stays on
+              your device.
+            </span>
+          </p>
+          <p className="aio-p-note">
+            <Icon name="shield" />
+            <span>
+              <b>ITR filing</b> on your behalf needs an ERI licence from the
+              Income Tax Department. This works out what you owe; you file on
+              the government portal.
+            </span>
+          </p>
         </div>
       </section>
 
       <section className="aio-p-sec aio-p-sec--tight">
         <div className="aio-p-cta">
-          <div className="aio-p-ctablocks" aria-hidden>
-            <i />
-            <i className="b" />
-            <i />
-            <i className="a" />
-            <i />
-            <i className="p" />
-            <i />
-            <i />
-            <i className="b" />
+          <div className="aio-glow" aria-hidden />
+          <span className="aio-eyebrow">Free to start</span>
+          <h2 className="aio-h2">
+            Stop opening ten tabs for{" "}
+            <span className="aio-grad-text">one task.</span>
+          </h2>
+          <p className="aio-lead">
+            PDFs, jobs, resumes, tax and AI — one account.
+          </p>
+          <div className="aio-row" style={{ justifyContent: "center" }}>
+            <Link className="aio-btn aio-btn--primary aio-btn--lg" href="/pdf">
+              Open the PDF tools
+            </Link>
+            <Link
+              className="aio-btn aio-btn--secondary aio-btn--lg"
+              href="/dashboard"
+            >
+              <Icon name="grid" />
+              See the dashboard
+            </Link>
           </div>
-          <div>
-            <h2 className="aio-h2">Stop opening ten tabs.</h2>
-            <p className="aio-lead" style={{ marginTop: 10 }}>
-              PDFs, jobs, resumes, tax and AI — one place, free to start.
-            </p>
-          </div>
-          <Link className="aio-btn aio-btn--primary aio-btn--lg" href="/pdf">
-            Open the PDF tools
-          </Link>
         </div>
       </section>
     </>

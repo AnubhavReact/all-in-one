@@ -32,9 +32,11 @@ run and work on the PDF tools without setting up Supabase at all.
 
 ## The design
 
-The interface follows a design handoff: *dusk*, a dim slate rather than black,
-with one warm marigold accent marking the next step on each view. Light is the
-alternative theme and the toggle remembers the choice.
+The interface follows a design handoff (v2): *dusk*, a deep navy rather than
+black, with a blue→cyan gradient marking the next step on each view. Light is
+the alternative theme and the toggle remembers the choice. Headings are Plus
+Jakarta Sans, text is Inter and figures are JetBrains Mono, all self-hosted by
+next/font.
 
 `apps/web/src/styles/` holds it:
 
@@ -46,8 +48,20 @@ alternative theme and the toggle remembers the choice.
   480 to one). Page-level classes are prefixed `aio-p-` so they cannot collide.
 
 Rules worth keeping: never hard-code a hex value, use `var(--token)`; one
-marigold primary button per view; category colours tint icon tiles only; and a
-tool that is not built shows *Coming soon* and is not a link.
+gradient primary button per view, with the "Ask AI" launcher the only other
+gradient; category colours tint icon tiles only; and a tool that is not built
+shows *Coming soon* and is not a link.
+
+### The AI surfaces
+
+v2 adds three: the **ask bar** in the hero and on the dashboard, the floating
+**assistant** (⌘J, or the launcher in the corner) and the **⌘K palette**.
+No model is connected — there is no `/api/ai` route and no key — so they do
+the part that needs none: whatever you type is matched against the tool
+catalogue and opens that tool, and an attached file is routed by its
+extension. Each surface says plainly that a real answer needs a key, rather
+than faking one. `packages/core/src/tools.ts` holds the matching
+(`searchTools`), so the website and the mobile app rank the same way.
 
 There is no Tailwind. The handoff ships complete CSS, and its reset fought the
 component classes.
@@ -63,7 +77,9 @@ npm run shots --workspace=@aio/web
 
 It drives the Chrome already on the machine, saves every page at 390, 768 and
 1440 into `apps/web/.shots/`, and fails if a page scrolls sideways or logs a
-console error.
+console error. It also opens the ⌘K palette, the assistant and the mega menu
+and shoots those, because a surface that only exists after a click is
+otherwise never checked.
 
 ## How this is laid out
 

@@ -1,7 +1,8 @@
+import { AiShell } from "@/components/ai/AiShell";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-/** The signed-out shell: sticky navbar, page, footer. */
+/** The signed-out shell: sticky navbar, page, footer, AI surfaces. */
 export default function SiteLayout({
   children,
 }: {
@@ -12,6 +13,7 @@ export default function SiteLayout({
       <Navbar />
       <main>{children}</main>
       <Footer />
+      <AiShell />
     </>
   );
 }

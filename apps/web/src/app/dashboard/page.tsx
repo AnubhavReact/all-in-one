@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
+import { AskBar, type AskChip } from "@/components/ai/AskBar";
 import { Icon } from "@/components/ui/Icon";
 import { Note } from "@/components/ui/Note";
 
@@ -7,6 +8,14 @@ export const metadata = {
   title: "Dashboard — AllInOne",
   description: "Your files, applications, tax estimate and tools in one view.",
 };
+
+/** The dashboard ask bar's shortcuts, all of them live routes. */
+const CHIPS: readonly AskChip[] = [
+  { label: "Merge PDF", icon: "merge", href: "/pdf/merge" },
+  { label: "Rotate pages", icon: "rotate", href: "/pdf/organise" },
+  { label: "Check ATS score", icon: "target", href: "/ats" },
+  { label: "Continue ITR", icon: "rupee", href: "/tax" },
+];
 
 const QUICK = [
   { label: "Merge PDF", href: "/pdf/merge", icon: "merge" },
@@ -36,6 +45,12 @@ export default function Dashboard() {
             </Link>
           </div>
         </div>
+
+        <AskBar
+          placeholder="Ask AllInOne AI — “merge my rent receipts”"
+          chips={CHIPS}
+          flat
+        />
 
         <Note icon="clock">
           This is the shape of the signed-in app. The numbers below are

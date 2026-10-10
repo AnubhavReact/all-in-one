@@ -37,6 +37,15 @@ export const ICON_PATHS = {
   pen: `<path d="M4 20h4L19 9l-4-4L4 16z"/>`,
   menu: `<path d="M4 7h16M4 12h16M4 17h16"/>`,
   send: `<path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/>`,
+
+  // v2 handoff additions: the AI sparkle and the ask-bar controls.
+  ai: `<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>`,
+  clip: `<path d="m21 11-8.6 8.6a5 5 0 0 1-7-7L14 4a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4L15.5 7"/>`,
+  mic: `<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>`,
+  x: `<path d="M6 6l12 12M18 6 6 18"/>`,
+  enter: `<path d="M20 5v7a3 3 0 0 1-3 3H5"/><path d="m9 11-4 4 4 4"/>`,
+  zap: `<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>`,
+  expand: `<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>`,
 } as const;
 
 export type IconName = keyof typeof ICON_PATHS;

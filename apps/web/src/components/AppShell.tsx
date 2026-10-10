@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { AiShell, openPalette } from "@/components/ai/AiShell";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -101,11 +102,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Icon name="menu" />
           </button>
 
-          <Link className="aio-nav-search" href="/pdf">
+          <button
+            type="button"
+            className="aio-nav-search aio-p-navsearch"
+            onClick={openPalette}
+          >
             <Icon name="search" />
             <span>Search tools, files, jobs…</span>
             <span className="aio-kbd">&#8984;K</span>
-          </Link>
+          </button>
 
           <div className="spacer" />
 
@@ -119,6 +124,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {children}
       </div>
+
+      <AiShell />
     </div>
   );
 }

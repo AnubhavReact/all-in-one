@@ -12,8 +12,8 @@
 /* next/font loads the three families; point the token vars at them so
  * nothing else has to know. */
 :root {
-  --font-display: var(--font-sora), "DM Sans", system-ui, sans-serif;
-  --font-sans: var(--font-dm-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-jakarta), "Inter", system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, Menlo, monospace;
 }
 
@@ -45,27 +45,45 @@ body {
 /* ---------- Hero ---------- */
 .aio-p-hero {
   position: relative;
-  display: grid;
-  grid-template-columns: 1.05fr 1fr;
-  gap: 56px;
-  align-items: center;
-  padding-top: 72px;
-  padding-bottom: 72px;
+  overflow: hidden;
+  text-align: center;
+  padding: 96px var(--space-8) 72px;
 }
-.aio-p-hero > div:not(.aio-p-herobg) {
+.aio-p-heroin {
+  grid-template-columns: minmax(0, 1fr);
   position: relative;
+  max-width: 860px;
+  margin: 0 auto;
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+}
+.aio-p-hero .aio-lead {
+  max-width: 640px;
+  font-size: 18px;
+}
+.aio-p-hero .aio-ask {
+  width: 100%;
+  max-width: 760px;
+  margin-top: 10px;
+  text-align: left;
+}
+.aio-p-hero .aio-p-trust {
+  margin-top: 0;
+  justify-content: center;
 }
 .aio-p-herobg {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(var(--line) 1px, transparent 1.2px);
-  background-size: 24px 24px;
-  mask-image: linear-gradient(180deg, #000 0, transparent 85%);
-  -webkit-mask-image: linear-gradient(180deg, #000 0, transparent 85%);
-}
-.aio-p-hero .aio-h1 {
-  margin: 18px 0;
+  background-image: radial-gradient(var(--line) 1px, transparent 1.3px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 30%,
+    #000 20%,
+    transparent 75%
+  );
 }
 .aio-p-ctas {
   display: flex;
@@ -152,22 +170,25 @@ body {
 .aio-p-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--surface-1);
 }
 .aio-p-strip div {
-  padding: var(--space-6) var(--space-8);
+  padding: 26px var(--space-8);
   border-left: 1px solid var(--line);
 }
 .aio-p-strip div:first-child {
   border-left: 0;
 }
 .aio-p-strip b {
-  display: block;
-  font: 600 28px/32px var(--font-mono);
+  /* inline-block, because a gradient-clipped block would stretch the box. */
+  display: inline-block;
+  font: 600 30px/34px var(--font-mono);
   letter-spacing: -0.02em;
 }
 .aio-p-strip span {
+  display: block;
   font-size: 13px;
   color: var(--ink-muted);
 }
@@ -198,12 +219,21 @@ body {
 .aio-p-pad40 {
   padding: 40px;
 }
+.aio-p-split--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+/* A search box that opens the palette is a button, so it needs the reset. */
+.aio-p-navsearch {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
 
 /* ---------- Feature list ---------- */
 .aio-p-feat {
   display: grid;
-  gap: 14px;
-  margin: var(--space-6) 0 28px;
+  gap: 18px;
+  margin: 28px 0 var(--space-8);
   padding: 0;
   list-style: none;
 }
@@ -222,6 +252,19 @@ body {
 .aio-p-feat li b {
   color: var(--ink);
   font-weight: 600;
+}
+.aio-p-feat li .aio-tile {
+  margin-top: 2px;
+}
+.aio-p-feat strong {
+  display: block;
+  color: var(--ink);
+  font: 700 15px/22px var(--font-display);
+}
+.aio-p-feat .d {
+  display: block;
+  font-size: 14px;
+  line-height: 21px;
 }
 
 /* ---------- Job row ---------- */
@@ -322,45 +365,20 @@ body {
 .aio-p-cta {
   position: relative;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-8);
-  padding: 48px 56px;
-  border-radius: 24px;
-  background: var(--surface-1);
-  border: 1px solid var(--line);
-}
-.aio-p-cta > div {
-  position: relative;
-}
-.aio-p-cta .aio-btn {
-  position: relative;
-  margin-right: 200px;
-}
-.aio-p-ctablocks {
-  position: absolute;
-  right: -20px;
-  top: -20px;
   display: grid;
-  grid-template-columns: repeat(3, 56px);
-  gap: 10px;
-  opacity: 0.9;
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
+  padding: 72px 48px;
+  border-radius: var(--radius-xl);
+  background: var(--surface-1);
+  border: 1px solid var(--brand-line);
 }
-.aio-p-ctablocks i {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-lg);
-  background: var(--surface-2);
+.aio-p-cta > *:not(.aio-glow) {
+  position: relative;
 }
-.aio-p-ctablocks i.b {
-  background: var(--brand);
-}
-.aio-p-ctablocks i.a {
-  background: var(--accent);
-}
-.aio-p-ctablocks i.p {
-  background: var(--cat-pdf);
+.aio-p-cta .aio-lead {
+  max-width: 620px;
 }
 
 /* ---------- App shell ---------- */
@@ -376,6 +394,7 @@ body {
   min-width: 0;
 }
 .aio-p-content {
+  grid-template-columns: minmax(0, 1fr);
   display: grid;
   gap: var(--space-6);
   padding: var(--space-8);
@@ -569,6 +588,301 @@ body {
   color: var(--ink-faint);
 }
 
+/* ---------- Bento (home) ----------
+ *
+ * The mock lays five cards on a 12-column grid: PDF 7, ATS 5, AI 7 over two
+ * rows, then tax and jobs 5 each beside it.
+ */
+.aio-p-bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-4);
+}
+.aio-p-b {
+  position: relative;
+  overflow: hidden;
+  padding: 28px;
+  border-radius: var(--radius-xl);
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+}
+.aio-p-b > * {
+  position: relative;
+}
+.aio-p-b-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.aio-p-b h3 {
+  margin: 14px 0 6px;
+  font: 700 20px/26px var(--font-display);
+  letter-spacing: -0.01em;
+}
+.aio-p-b p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-muted);
+}
+.aio-p-bglow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    360px 200px at 100% 0%,
+    var(--glow-a),
+    transparent 70%
+  );
+}
+.aio-p-b--pdf {
+  grid-column: span 7;
+}
+.aio-p-b--ats {
+  grid-column: span 5;
+}
+.aio-p-b--ai {
+  grid-column: span 7;
+  grid-row: span 2;
+  background: linear-gradient(180deg, var(--brand-soft), var(--surface-1) 55%);
+  border-color: var(--brand-line);
+}
+.aio-p-b--tax {
+  grid-column: span 5;
+}
+.aio-p-b--jobs {
+  grid-column: span 5;
+}
+
+/* Merge preview inside the PDF card. */
+.aio-p-pdfdemo {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+.aio-p-pdfdemo .f {
+  flex: 1;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  border: 1px solid var(--line);
+}
+.aio-p-pdfdemo .pg {
+  height: 58px;
+  border-radius: 6px;
+  background: repeating-linear-gradient(
+    180deg,
+    var(--surface-2) 0 6px,
+    transparent 6px 12px
+  );
+}
+.aio-p-pdfdemo span {
+  font: 500 12px/16px var(--font-mono);
+  color: var(--ink-muted);
+}
+.aio-p-pdfdemo .arrow {
+  display: grid;
+  place-items: center;
+  color: var(--brand-text);
+}
+.aio-p-pdfdemo .f--out {
+  border-color: var(--brand-line);
+}
+.aio-p-pdfdemo .f--out .pg {
+  background: repeating-linear-gradient(
+    180deg,
+    var(--brand-soft) 0 6px,
+    transparent 6px 12px
+  );
+}
+.aio-p-pdfdemo .f--out span {
+  color: var(--brand-text);
+}
+
+/* Score ring and missing keywords inside the ATS card. */
+.aio-p-atsdemo {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-top: 18px;
+}
+.aio-p-atsdemo .aio-ring {
+  width: 112px;
+  height: 112px;
+}
+.aio-p-atsdemo .col {
+  display: grid;
+  gap: var(--space-2);
+}
+.aio-p-atsdemo .col > span {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+.aio-p-atsdemo .kw {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Two ranked jobs inside the jobs card. */
+.aio-p-jobmini {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.aio-p-jobmini div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  border: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 600;
+}
+.aio-p-jobmini b {
+  font: 600 12px/1 var(--font-mono);
+  color: var(--success);
+}
+
+/* Sample conversation inside the AI card. */
+.aio-p-thread {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+.aio-p-thread .aio-bubble {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+/* ---------- Copilot split ---------- */
+.aio-p-copilot {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 64px;
+  align-items: center;
+}
+.aio-p-copilot .aio-assist {
+  width: 420px;
+  max-width: 100%;
+}
+
+/* ---------- AI surfaces: launcher, docked assistant, palette ----------
+ *
+ * components.css styles each panel but says nothing about where it sits, so
+ * the placement is here.
+ */
+.aio-p-launcher {
+  position: fixed;
+  right: var(--space-6);
+  bottom: var(--space-6);
+  z-index: 20;
+}
+.aio-p-assistdock {
+  position: fixed;
+  right: var(--space-6);
+  bottom: var(--space-6);
+  z-index: 21;
+  width: 400px;
+  max-width: calc(100vw - var(--space-8));
+}
+.aio-p-assistdock .aio-assist {
+  width: 100%;
+  max-height: calc(100dvh - 2 * var(--space-6));
+}
+.aio-p-assistdock .aio-assist-body {
+  overflow-y: auto;
+}
+.aio-p-cmdscrim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  border: 0;
+  background: rgba(3, 8, 20, 0.6);
+}
+.aio-p-cmdwrap {
+  position: fixed;
+  inset: 0;
+  z-index: 51;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding: 12vh var(--space-4) var(--space-4);
+  pointer-events: none;
+}
+.aio-p-cmdwrap > * {
+  pointer-events: auto;
+}
+.aio-p-cmd {
+  width: 620px;
+  max-width: 100%;
+}
+.aio-p-cmd-item {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+/* An <input> carries an intrinsic width of about 20 characters, and a flex
+ * item is sized from it even when min-width is 0. On a phone that pushed the
+ * ask bar wider than the screen and the whole page scrolled sideways. A width
+ * of 0 with flex: 1 makes the field take what is left instead. */
+.aio-ask input,
+.aio-input input,
+.aio-cmd-input input {
+  min-width: 0;
+  width: 0;
+}
+
+/* The attach control is a label wrapping a file input, so the input itself
+ * has to go. */
+.aio-ask-row label input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.aio-p-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.aio-p-askmiss {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0 6px 6px;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--ink-muted);
+}
+.aio-p-askmiss svg.i {
+  flex: none;
+  margin-top: 2px;
+  color: var(--brand-text);
+}
+/* The status dot is green for "online". Nothing is connected, so it is not.
+ * `.aio-assist-head span i` is more specific, hence the head in front. */
+.aio-assist-head .aio-p-offline i {
+  background: var(--ink-faint);
+}
+.aio-p-cmd-empty {
+  padding: var(--space-4) 10px;
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+
 /* ---------- Mobile nav pieces, hidden on desktop ---------- */
 .aio-p-menubtn,
 .aio-p-scrim,
@@ -593,12 +907,20 @@ body {
     display: grid;
   }
   .aio-p-hero {
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-    padding-top: var(--space-12);
+    padding: 72px var(--space-6) var(--space-12);
   }
   .aio-p-grid4 {
     grid-template-columns: repeat(3, 1fr);
+  }
+  .aio-p-copilot {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+  .aio-p-split--3 {
+    grid-template-columns: 1fr;
+  }
+  .aio-p-copilot .aio-assist {
+    width: 100%;
   }
   .aio-p-row2,
   .aio-p-row3 {
@@ -607,16 +929,10 @@ body {
   .aio-p-stats {
     grid-template-columns: repeat(2, 1fr);
   }
-  .aio-p-cta .aio-btn {
-    margin-right: 0;
-  }
-  .aio-p-ctablocks {
-    display: none;
-  }
 
   /* The rail slides over the content instead of taking a column. */
   .aio-p-app {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .aio-p-app .aio-side {
     position: fixed;
@@ -663,6 +979,27 @@ body {
   .aio-p-pages {
     grid-template-columns: repeat(2, 1fr);
   }
+  .aio-p-hero {
+    padding: var(--space-12) var(--space-6) 40px;
+  }
+  /* Two columns, so the 12-column spans have to go. */
+  .aio-p-bento {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .aio-p-b {
+    padding: 20px;
+  }
+  .aio-p-b--pdf,
+  .aio-p-b--ats,
+  .aio-p-b--ai,
+  .aio-p-b--tax,
+  .aio-p-b--jobs {
+    grid-column: auto / span 1;
+    grid-row: auto;
+  }
+  .aio-p-atsdemo {
+    flex-wrap: wrap;
+  }
   .aio-p-split {
     grid-template-columns: 1fr;
   }
@@ -679,9 +1016,7 @@ body {
     padding: var(--space-6);
   }
   .aio-p-cta {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: var(--space-8);
+    padding: var(--space-12) var(--space-6);
   }
   .aio-footer-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -711,6 +1046,7 @@ body {
     font-size: 32px;
     line-height: 38px;
   }
+  .aio-p-bento,
   .aio-p-grid4,
   .aio-p-pages,
   .aio-p-strip,
@@ -734,6 +1070,28 @@ body {
   .aio-p-ctas .aio-btn,
   .aio-p-actions .aio-btn {
     width: 100%;
+  }
+  .aio-p-hero {
+    padding: 40px var(--space-4) var(--space-8);
+  }
+  .aio-p-cta {
+    padding: var(--space-8) var(--space-4);
+  }
+  /* The assistant becomes a bottom sheet, as the handoff asks at 480. */
+  .aio-p-assistdock {
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: auto;
+    max-width: none;
+  }
+  .aio-p-assistdock .aio-assist {
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    max-height: 86dvh;
+  }
+  .aio-p-launcher {
+    right: var(--space-4);
+    bottom: var(--space-4);
   }
 }
 

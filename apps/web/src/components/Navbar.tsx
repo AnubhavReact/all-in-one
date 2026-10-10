@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { SECTIONS, TOOLS } from "@aio/core";
+import { openPalette } from "@/components/ai/AiShell";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -103,11 +104,15 @@ export function Navbar() {
         ))}
       </nav>
 
-      <Link className="aio-nav-search" href="/pdf">
+      <button
+        type="button"
+        className="aio-nav-search aio-p-navsearch"
+        onClick={openPalette}
+      >
         <Icon name="search" />
         <span>Search tools</span>
         <span className="aio-kbd">&#8984;K</span>
-      </Link>
+      </button>
 
       <div className="aio-nav-actions">
         <button

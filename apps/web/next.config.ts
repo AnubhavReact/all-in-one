@@ -9,10 +9,10 @@ const nextConfig: NextConfig = {
   // detects an agent, which shows up as a stray uncommitted change.
   agentRules: false,
 
-  // The dev-only badge sits bottom-left, right on top of the sidebar's
-  // account card. It never ships, but it makes the app hard to look at while
-  // building it. Moved to the opposite corner, which is empty.
-  devIndicators: { position: "bottom-right" },
+  // The dev-only badge never ships, but it covers whatever corner it sits in
+  // while the app is being built. Bottom-right is now the "Ask AI" launcher,
+  // and the sidebar's account card is above bottom-left, so it goes there.
+  devIndicators: { position: "bottom-left" },
 };
 
 export default nextConfig;

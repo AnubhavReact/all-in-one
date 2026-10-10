@@ -1,4 +1,5 @@
 import { sectionById, toolsByHue } from "@aio/core";
+import { HeroDrop } from "@/components/HeroDrop";
 import { ToolCard } from "@/components/ToolCard";
 import { Note } from "@/components/ui/Note";
 
@@ -22,6 +23,12 @@ export default function PdfIndex() {
             {section?.blurb}
           </p>
         </div>
+      </div>
+
+      {/* The hero's drop zone moved here when v2 made the home hero an ask
+          bar. Dropping a file is still the fastest way into the right tool. */}
+      <div style={{ marginBottom: "var(--space-8)", maxWidth: 720 }}>
+        <HeroDrop />
       </div>
 
       <div className="aio-p-grid4">
