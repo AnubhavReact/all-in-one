@@ -1,4 +1,67 @@
-# All In One
+# AllInOne: PDF, career &amp; tax tools with an AI assistant
+
+> One workspace for the paperwork of a working life: edit PDFs, build an ATS-ready resume, find jobs, compare tax regimes, and just *ask* for what you need. **The PDF tools run 100% in the browser: your files never leave your device.**
+
+![Next.js](https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![Expo](https://img.shields.io/badge/Expo_SDK_57-React_Native_0.86-000020?logo=expo)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
+![Turborepo](https://img.shields.io/badge/Turborepo-monorepo-EF4444?logo=turborepo&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-Supabase_Postgres-2D3748?logo=prisma)
+![Vitest](https://img.shields.io/badge/tested_with-Vitest-6E9F18?logo=vitest&logoColor=white)
+
+<p align="center">
+  <img src="docs/screenshots/workspace.jpg" alt="Workspace: sidebar of tools, ask bar, file drop and docked AI assistant" width="100%">
+</p>
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/welcome.jpg" alt="Landing page"><br><sub><b>Landing</b>: every tool, one AI that knows them all</sub></td>
+    <td width="50%"><img src="docs/screenshots/command-palette.jpg" alt="Command palette"><br><sub><b>⌘K palette</b>: fuzzy tool search shared by web &amp; mobile</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/pdf-merge.jpg" alt="Merge PDFs tool"><br><sub><b>Merge PDFs</b>: processed in-tab, nothing uploaded</sub></td>
+    <td width="50%" align="center"><img src="docs/screenshots/mobile.jpg" alt="Mobile layout" width="220"><br><sub><b>Responsive</b>: 1440 → 768 → 390 layouts</sub></td>
+  </tr>
+</table>
+
+## ✨ What's special
+
+| | |
+|---|---|
+| 🔒 **Privacy by architecture** | PDFs are merged, split, rotated and converted **client-side** with `pdf-lib` + `pdfjs-dist`. No upload, works offline, nothing to delete. |
+| 🤖 **Three AI surfaces** | Ask bar, floating assistant (⌘J) and command palette (⌘K). Intent-matches what you type or drop to the right tool; BYO-key LLM chat is designed in, and nothing fakes an answer. |
+| 🧱 **Write once, use twice** | `packages/core` (plain TS) holds tool catalogue, search ranking, tax &amp; ATS logic, shared by the **Next.js** site and the **Expo** app so they can never disagree. |
+| 🖥️ **Web app = backend** | Next.js route handlers serve both web and mobile; no separate server to run. |
+| 🎨 **Token-driven design system** | Light/dark themes from one `tokens.css`, no hard-coded hex, `aio-` component classes, self-hosted fonts. |
+| 🧪 **Visual QA in CI style** | A Puppeteer script shoots every page at 390/768/1440 and **fails on sideways scroll or console errors**; the PDF logic is unit-tested against real PDFs. |
+| ⚖️ **Honest scope** | No LinkedIn scraping, no iframed ChatGPT, no fake ITR filing. Each "coming soon" page says what the real catch is. |
+
+## 🧰 Tech stack &amp; libraries
+
+| Layer | Used |
+|---|---|
+| Web | Next.js 16 (App Router), React 19, `lucide-react`, `clsx`, next/font |
+| Mobile | Expo SDK 57, React Native 0.86 |
+| PDF engine | `pdf-lib` (edit/merge/split), `pdfjs-dist` (render pages), `jszip` (bundle images) |
+| Shared logic | `@aio/core`: plain TypeScript, no DOM/RN imports |
+| Data | PostgreSQL on Supabase, Prisma schema (`@aio/db`) |
+| Tooling | Turborepo, npm workspaces, TypeScript 6, ESLint 9 |
+| Testing | Vitest (unit), Puppeteer-core (screenshot &amp; layout checks) |
+
+## 🗺️ Status
+
+| Feature | State |
+|---|---|
+| PDF tools: merge, split, organise, PDF→images, images→PDF | ✅ Live |
+| Recent files, ⌘K palette, assistant, theme toggle | ✅ Live |
+| ATS score check, resume builder | 🛠️ Building |
+| Job search (Adzuna / RemoteOK feeds), tax &amp; ITR helper | 📋 Planned |
+| AI chat with your own Claude / OpenAI / Gemini key | 📋 Planned |
+
+---
+
+## Overview
 
 Document, career and tax tools in one place: PDF tools, a job search, a resume
 builder, an ATS check, an AI chat and an income tax calculator.
@@ -176,3 +239,7 @@ something to check when it arrives.
 - **Filing a tax return for someone.** That needs an ERI licence from the
   Income Tax Department. This calculates and explains; filing happens on the
   government portal.
+
+---
+
+Built by **Anubhav Shukla** · [Portfolio](https://anubhav-shukla.netlify.app) · [LinkedIn](https://www.linkedin.com/in/anubhav-shukla-6028041ab)
