@@ -54,9 +54,10 @@
 | Feature | State |
 |---|---|
 | PDF tools: merge, split, organise, PDF→images, images→PDF | ✅ Live |
+| Tax: old vs new regime, slab-by-slab, FY 2026-27 | ✅ Live |
 | Recent files, ⌘K palette, assistant, theme toggle | ✅ Live |
 | ATS score check, resume builder | 🛠️ Building |
-| Job search (Adzuna / RemoteOK feeds), tax &amp; ITR helper | 📋 Planned |
+| Job search (Adzuna / RemoteOK feeds) | 📋 Planned |
 | AI chat with your own Claude / OpenAI / Gemini key | 📋 Planned |
 
 ---

@@ -1,0 +1,38 @@
+/* Shared pieces for demo storyboards. Charcoal tokens only. */
+.col { display: grid; gap: 10px; align-content: start; height: 100%; }
+.label { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--char-muted); }
+.drop {
+  display: grid; place-items: center; gap: 6px; padding: 14px; border-radius: var(--r-lg);
+  border: 1.5px dashed var(--char-line); color: var(--char-muted); font-size: 13px; text-align: center;
+}
+.row {
+  display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--r-md); background: var(--char-2); border: 1px solid var(--char-line);
+  animation: pop .35s ease both;
+}
+.row:nth-child(2) { animation-delay: .12s; }
+.row:nth-child(3) { animation-delay: .24s; }
+.row:nth-child(4) { animation-delay: .36s; }
+.ficon { display: grid; place-items: center; width: 30px; height: 30px; border-radius: var(--r-sm); background: var(--char-3); color: var(--char-muted); }
+.ficon svg { width: 16px; height: 16px; }
+.row strong { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mono { font: 500 12px/1 var(--font-mono); color: var(--char-muted); }
+.picked { border-color: var(--progress); box-shadow: 0 8px 24px rgba(0,0,0,.4); transform: translateX(8px); }
+.progressBar { height: 8px; border-radius: 4px; background: var(--char-3); overflow: hidden; }
+.progressBar i { display: block; height: 100%; width: 100%; background: var(--progress); transform-origin: left; animation: grow 2.4s ease-out both; }
+.ok { color: var(--char-ok); }
+.center { display: grid; place-items: center; align-content: center; gap: 12px; height: 100%; text-align: center; }
+.big { font-size: 20px; font-weight: 700; letter-spacing: -0.015em; }
+.okTile { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: color-mix(in srgb, var(--char-ok) 18%, transparent); color: var(--char-ok); }
+.okTile svg { width: 28px; height: 28px; }
+.fakeBtn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: var(--r-md); background: var(--brand); color: var(--on-brand); font-size: 14px; font-weight: 600; }
+.fakeBtn svg { width: 16px; height: 16px; }
+@keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes grow { from { transform: scaleX(.05); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .row, .progressBar i { animation: none; } }
+@media (max-width: 600px) {
+  .col { gap: 8px; }
+  .drop { display: none; }
+  .row { padding: 8px 10px; }
+  .big { font-size: 17px; }
+}

@@ -1,0 +1,11 @@
+.tile { display: inline-grid; place-items: center; flex: none; border-radius: var(--r-lg); }
+.s40 { width: 40px; height: 40px; }
+.s40 svg { width: 20px; height: 20px; }
+.s48 { width: 48px; height: 48px; }
+.s48 svg { width: 24px; height: 24px; }
+.pdf { background: var(--tile-pdf-bg); color: var(--tile-pdf); }
+.career { background: var(--tile-career-bg); color: var(--tile-career); }
+.tax { background: var(--tile-tax-bg); color: var(--tile-tax); }
+.learn { background: var(--tile-learn-bg); color: var(--tile-learn); }
+.brand { background: var(--tile-brand-bg); color: var(--tile-brand); }
+.soon { background: transparent; color: var(--faint); border: 1.5px dashed var(--soon-line); }

@@ -118,3 +118,23 @@ describe("imagesToPdf", () => {
     expect(page.getHeight()).toBe(1);
   });
 });
+
+describe("imagesToPdf options", () => {
+  it("uses A4 pages when asked", async () => {
+    const out = await imagesToPdf(
+      [new File([RED_PNG], "a.png", { type: "image/png" })],
+      { pageSize: "a4", margin: 36 },
+    );
+    const page = (await PDFDocument.load(out)).getPage(0);
+    expect(Math.round(page.getWidth())).toBe(595);
+    expect(Math.round(page.getHeight())).toBe(842);
+  });
+
+  it("adds the margin around a fitted image", async () => {
+    const out = await imagesToPdf(
+      [new File([RED_PNG], "a.png", { type: "image/png" })],
+      { margin: 10 },
+    );
+    expect((await PDFDocument.load(out)).getPage(0).getWidth()).toBe(21);
+  });
+});

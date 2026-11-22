@@ -1,0 +1,27 @@
+.page { display: grid; gap: 32px; max-width: 720px; }
+
+.head { display: grid; gap: 16px; justify-items: start; }
+.titleRow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.blurb { max-width: 640px; }
+
+.panel {
+  display: grid; gap: 16px; padding: 24px; border-radius: var(--r-lg);
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-card);
+}
+.list { display: grid; gap: 12px; }
+.list li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; align-items: start; font-size: 16px; line-height: 24px; }
+.n {
+  display: grid; place-items: center; width: 28px; height: 28px; margin-top: -2px; border-radius: 50%;
+  background: var(--sunken); color: var(--muted); font: 600 13px/1 var(--font-mono);
+}
+.snag { padding-top: 16px; border-top: 1px solid var(--line); font-size: 14px; line-height: 20px; color: var(--muted); }
+.snag strong { color: var(--ink); font-weight: 600; }
+
+.foot { display: grid; gap: 16px; }
+.promise { font-size: 15px; line-height: 22px; color: var(--muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 600px) {
+  .panel { padding: 20px; }
+  .actions > * { flex: 1 1 100%; }
+}

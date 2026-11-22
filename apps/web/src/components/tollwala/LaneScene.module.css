@@ -1,0 +1,74 @@
+/* Charcoal in both themes, like the demo windows. Colours from tokens only. */
+.scene {
+  margin: 0; display: grid; gap: 16px; padding: 20px; border-radius: var(--r-xl);
+  background: var(--char); color: var(--char-ink); border: 1px solid var(--char-line); box-shadow: var(--shadow-pop);
+  min-width: 0;
+}
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.sign {
+  display: inline-flex; align-items: center; height: 34px; padding: 0 12px; border-radius: var(--r-md); font-size: 13px;
+  background: var(--tw-sign); color: var(--on-brand); box-shadow: inset 0 0 0 2px var(--char), inset 0 0 0 4px var(--on-brand);
+  font-weight: 800; letter-spacing: .02em; white-space: nowrap;
+}
+.running {
+  display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--char-ok) 18%, transparent); color: var(--char-ok); font-size: 13px; font-weight: 700;
+}
+.running i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: blink 1.6s ease-in-out infinite; }
+.counter {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 12px;
+  border-radius: var(--r-lg); background: var(--char-2); border: 1px solid var(--char-line);
+}
+.counter small { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--char-muted); }
+.counter b { font: 700 20px/1 var(--font-mono); font-variant-numeric: tabular-nums; color: var(--scene-amber); letter-spacing: .06em; }
+
+.road { display: block; width: 100%; height: auto; border-radius: var(--r-lg); overflow: hidden; }
+.verge { fill: var(--scene-verge); }
+.tarmac { fill: var(--scene-road); }
+.edge { fill: var(--scene-lane); opacity: .8; }
+.dash { fill: var(--scene-amber); opacity: .7; }
+.zebra { fill: var(--scene-lane); opacity: .25; }
+.canopy { fill: var(--scene-lane); opacity: .06; }
+.board { fill: var(--scene-lane); }
+.boardText { fill: var(--tw-navy); font: 800 15px var(--font-sans); letter-spacing: .1em; }
+.hazard { fill: var(--scene-amber); }
+.reader { fill: var(--char); stroke: var(--char-line); stroke-width: 2; }
+.lightOk { fill: var(--char-ok); transition: fill .2s; }
+.lightWait { fill: var(--scene-amber); transition: fill .2s; }
+.boothBox { fill: var(--scene-lane); }
+.boothSlot { fill: var(--brand); }
+
+.car { transition: transform 1s cubic-bezier(.45, 0, .25, 1); }
+.enter { animation: enter 1s cubic-bezier(.45, 0, .25, 1) both; }
+.bodyA { fill: var(--scene-car-a); }
+.bodyB { fill: var(--scene-car-b); }
+.glass { fill: var(--scene-glass); }
+
+/* Seen from above, a lifting arm shortens towards its pivot. */
+.arm { transform-box: fill-box; transform-origin: 50% 0; transition: transform .45s ease; }
+.armUp { transform: scaleY(.08); }
+.armBody { fill: var(--scene-amber); stroke: var(--char); stroke-width: 2; }
+.armStripe { fill: var(--scene-red); }
+.pivot { fill: var(--scene-lane); stroke: var(--char); stroke-width: 4; }
+
+.status { display: flex; align-items: center; gap: 10px; font-size: 15px; line-height: 22px; color: var(--char-ink); min-width: 0; }
+.dotOk, .dotWait { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.dotOk { background: var(--char-ok); }
+.dotWait { background: var(--scene-amber); }
+.sample {
+  margin-left: auto; height: 22px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: var(--r-pill);
+  border: 1px solid var(--char-line); font: 600 11px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--char-muted);
+}
+
+@keyframes enter { from { translate: -260px 0; } to { translate: 0 0; } }
+@keyframes blink { 50% { opacity: .35; } }
+
+@media (max-width: 600px) {
+  .scene { padding: 14px; gap: 12px; }
+  .counter { margin-left: 0; height: 38px; }
+  .counter b { font-size: 18px; }
+  .status { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .car, .arm, .enter, .running i { transition: none; animation: none; }
+}

@@ -16,12 +16,17 @@ export async function pageCount(file: File) {
   return (await loadDocument(file)).getPageCount();
 }
 
-export async function mergeDocuments(files: File[]): Promise<Uint8Array> {
+export async function mergeDocuments(
+  files: File[],
+  /** Called after each file is copied in, with how many are done. */
+  onProgress?: (done: number, total: number) => void,
+): Promise<Uint8Array> {
   const out = await PDFDocument.create();
-  for (const file of files) {
+  for (const [index, file] of files.entries()) {
     const doc = await loadDocument(file);
     const pages = await out.copyPages(doc, doc.getPageIndices());
     for (const page of pages) out.addPage(page);
+    onProgress?.(index + 1, files.length);
   }
   return out.save();
 }
@@ -62,22 +67,64 @@ export async function rewritePages(
   return out.save();
 }
 
-export async function imagesToPdf(files: File[]): Promise<Uint8Array> {
+/** Page sizes in PDF points (1/72 inch). "fit" sizes each page to its image. */
+export const PAGE_SIZES = {
+  a4: [595.28, 841.89],
+  letter: [612, 792],
+} as const;
+
+export type ImagePageSize = keyof typeof PAGE_SIZES | "fit";
+
+export async function imagesToPdf(
+  files: File[],
+  options: {
+    pageSize?: ImagePageSize;
+    /** White space around each image, in points. */
+    margin?: number;
+    onProgress?: (done: number, total: number) => void;
+  } = {},
+): Promise<Uint8Array> {
+  const { pageSize = "fit", margin = 0, onProgress } = options;
   const out = await PDFDocument.create();
-  for (const file of files) {
+  for (const [index, file] of files.entries()) {
     const bytes = new Uint8Array(await file.arrayBuffer());
     const isPng = file.type === "image/png";
     const image = isPng
       ? await out.embedPng(bytes)
       : await out.embedJpg(bytes);
-    // One page per image, sized exactly to the image so nothing is cropped.
-    const page = out.addPage([image.width, image.height]);
-    page.drawImage(image, {
-      x: 0,
-      y: 0,
-      width: image.width,
-      height: image.height,
-    });
+
+    if (pageSize === "fit") {
+      // One page per image, sized to the image so nothing is cropped.
+      const page = out.addPage([
+        image.width + margin * 2,
+        image.height + margin * 2,
+      ]);
+      page.drawImage(image, {
+        x: margin,
+        y: margin,
+        width: image.width,
+        height: image.height,
+      });
+    } else {
+      // A fixed paper size: turn the page to match the image, then scale the
+      // image down (never up past its own size) and centre it.
+      const [short, long] = PAGE_SIZES[pageSize];
+      const landscape = image.width > image.height;
+      const width = landscape ? long : short;
+      const height = landscape ? short : long;
+      const page = out.addPage([width, height]);
+      const room = { w: width - margin * 2, h: height - margin * 2 };
+      const scale = Math.min(room.w / image.width, room.h / image.height, 1);
+      const w = image.width * scale;
+      const h = image.height * scale;
+      page.drawImage(image, {
+        x: (width - w) / 2,
+        y: (height - h) / 2,
+        width: w,
+        height: h,
+      });
+    }
+    onProgress?.(index + 1, files.length);
   }
   return out.save();
 }

@@ -1,0 +1,151 @@
+/* Shared pieces for the PDF tools. Rows match the DropZone rows. */
+
+.stack { display: grid; gap: 16px; min-width: 0; }
+
+/* ---------------------------------------------------------------- rows */
+.list { display: grid; gap: 8px; }
+.row {
+  display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; align-items: center; gap: 12px;
+  min-height: 60px; padding: 8px 8px 8px 4px; border-radius: var(--r-md);
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-card);
+  position: relative;
+}
+.row.single { grid-template-columns: auto minmax(0, 1fr) auto; padding-left: 12px; }
+.dragging { z-index: 2; box-shadow: var(--shadow-pop); border-color: var(--brand); }
+.ghostRow { opacity: .4; }
+.grip {
+  display: grid; place-items: center; width: 36px; height: 44px; border: 0; border-radius: var(--r-sm);
+  background: transparent; color: var(--faint); cursor: grab; touch-action: none;
+}
+.grip:hover { color: var(--ink); background: var(--sunken); }
+.grip:active { cursor: grabbing; }
+.grip svg { width: 18px; height: 18px; }
+.index { font: 600 13px/1 var(--font-mono); color: var(--faint); min-width: 16px; text-align: right; }
+.fileTile {
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--r-sm);
+  background: var(--tile-pdf-bg); color: var(--tile-pdf); overflow: hidden; flex: none;
+}
+.fileTile svg { width: 18px; height: 18px; }
+.fileTile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.name { min-width: 0; }
+.name strong { display: block; font-size: 15px; line-height: 22px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.meta { display: block; font: 500 13px/18px var(--font-mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.lead { display: flex; align-items: center; gap: 4px; }
+
+/* ------------------------------------------------------ add-more bar */
+.addMore {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px;
+  padding: 14px 20px; border-radius: var(--r-lg); border: 2px dashed var(--line-strong);
+  background: var(--card); text-align: center; transition: border-color .15s, background-color .15s;
+}
+.addMore:hover { border-color: var(--brand); }
+.addMore strong { font-size: 15px; line-height: 22px; font-weight: 600; }
+.addMore.over { border-color: var(--brand); background: var(--brand-soft); }
+.addMore.over strong { color: var(--brand-ink); }
+
+/* -------------------------------------------------------------- error */
+.error {
+  display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: var(--r-md);
+  background: var(--danger-soft); color: var(--danger); font-size: 14px; line-height: 20px; font-weight: 500;
+}
+.error svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+
+/* -------------------------------------------------------- panel/card */
+.panel {
+  display: grid; gap: 20px; padding: 20px; border-radius: var(--r-lg);
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-card);
+}
+.panelTitle { font-size: 16px; line-height: 24px; font-weight: 700; }
+.options { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+
+/* ------------------------------------------------------------ action bar */
+.bar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px;
+  padding: 12px 12px 12px 20px; border-radius: var(--r-lg);
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-card);
+}
+.total { font: 600 14px/20px var(--font-mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.barActions { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 600px) {
+  .bar { padding: 12px; }
+  .barActions { width: 100%; }
+  .barActions > * { flex: 1 1 auto; }
+}
+
+/* ------------------------------------------------------------ progress */
+.working {
+  display: grid; gap: 12px; padding: 20px; border-radius: var(--r-lg);
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-card);
+}
+.working p { font-size: 15px; line-height: 22px; font-weight: 600; }
+.working small { font: 500 13px/18px var(--font-mono); color: var(--muted); }
+.track { height: 8px; border-radius: var(--r-pill); background: var(--sunken); overflow: hidden; }
+.fill { height: 100%; border-radius: inherit; background: var(--brand); transition: width .2s ease; }
+
+/* -------------------------------------------------------------- result */
+.result {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px 14px; align-items: start;
+  padding: 20px; border-radius: var(--r-lg); background: var(--success-soft);
+}
+.result > svg { width: 28px; height: 28px; color: var(--success); }
+.result h2 { font-size: 18px; line-height: 26px; font-weight: 700; overflow-wrap: anywhere; }
+.resultMeta { display: flex; flex-wrap: wrap; gap: 2px 8px; margin-top: 4px; font: 600 13px/20px var(--font-mono); font-variant-numeric: tabular-nums; color: var(--ink); }
+.resultMeta .zero { color: var(--success); }
+.resultActions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 600px) {
+  .resultActions > * { flex: 1 1 auto; }
+}
+
+/* ---------------------------------------------------------- text field */
+.field { display: grid; gap: 8px; }
+.label { font-size: 14px; line-height: 20px; font-weight: 600; }
+.input {
+  height: 52px; padding: 0 14px; border-radius: var(--r-md); border: 1px solid var(--line-strong);
+  background: var(--card); color: var(--ink); width: 100%; min-width: 0;
+  font: 600 17px/1 var(--font-mono); font-variant-numeric: tabular-nums;
+}
+.input::placeholder { color: var(--faint); font-weight: 500; }
+.input:focus-visible { outline: none; border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
+.input[aria-invalid="true"] { border: 2px solid var(--danger); background: var(--danger-soft); padding: 0 13px; }
+.helper { font-size: 14px; line-height: 20px; color: var(--muted); }
+.helper b { font-family: var(--font-mono); font-weight: 600; color: var(--ink); }
+.fieldError { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; line-height: 20px; font-weight: 500; color: var(--danger); }
+.fieldError svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+
+/* ------------------------------------------------------- page grid */
+.pages { display: grid; grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 12px; }
+.page {
+  display: grid; gap: 8px; padding: 10px; border-radius: var(--r-md);
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-card);
+}
+.shot {
+  display: grid; place-items: center; aspect-ratio: 3 / 4; border-radius: var(--r-sm);
+  background: var(--sunken); overflow: hidden;
+}
+.shot img { max-width: 88%; max-height: 88%; box-shadow: var(--shadow-card); transition: transform .2s ease; }
+.pageBar { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+.pageNum { font: 600 13px/1 var(--font-mono); color: var(--muted); padding-left: 4px; }
+.pageOps { display: flex; min-width: 0; }
+.page { min-width: 0; }
+.removed { border-style: dashed; border-color: var(--line-strong); box-shadow: none; background: transparent; }
+.removed .shot img { opacity: .3; }
+.shot { position: relative; }
+.removedTag {
+  position: absolute; top: 8px; left: 8px; z-index: 1; padding: 2px 8px; border-radius: var(--r-pill);
+  background: var(--danger-soft); color: var(--danger); font-size: 12px; line-height: 18px; font-weight: 600;
+}
+.pressed { background: var(--danger-soft); color: var(--danger); }
+.pressed:hover { background: var(--danger-soft); color: var(--danger); }
+@media (max-width: 420px) {
+  .pages { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .page { padding: 6px; }
+}
+
+/* -------------------------------------------------------- index grid */
+.toolGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1100px) { .toolGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .toolGrid { grid-template-columns: minmax(0, 1fr); } }
+.indexPage { display: grid; gap: 32px; }
+.pageOps button:disabled { opacity: .4; cursor: not-allowed; background: transparent; }
+.thumb { width: 48px; height: 48px; background: var(--sunken); }
+.toolGrid > li { display: grid; }

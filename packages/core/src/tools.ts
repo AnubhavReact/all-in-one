@@ -10,7 +10,13 @@
 /** Icon tile colours. Only ever tint an icon, never a fill or body text. */
 export type TileHue = "pdf" | "career" | "ai" | "tax";
 
-export type ToolStatus = "live" | "new" | "soon";
+/** "building" is the one being worked on now; it is not usable yet either. */
+export type ToolStatus = "live" | "new" | "building" | "soon";
+
+/** Usable today. Everything else is shown, dimmed, as coming. */
+export function isLive(tool: Pick<Tool, "status">): boolean {
+  return tool.status === "live" || tool.status === "new";
+}
 
 export type Tool = {
   slug: string;
@@ -81,11 +87,11 @@ export const SECTIONS: Section[] = [
   },
   {
     id: "tax",
-    name: "Tax & ITR",
+    name: "Tax",
     href: "/tax",
     hue: "tax",
     blurb:
-      "Compare the old and new regimes, work out what you owe, and get help filing.",
+      "Compare the old and new regimes and see, slab by slab, what you owe.",
   },
 ];
 
@@ -127,7 +133,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "to-images",
     name: "PDF to images",
-    blurb: "Save every page as a PNG, in one zip.",
+    blurb: "Save every page as a JPG or PNG.",
     hue: "pdf",
     icon: "image",
     href: "/pdf/to-images",
@@ -145,6 +151,18 @@ export const TOOLS: Tool[] = [
     status: "live",
     action: "Open tool",
     accepts: ["png", "jpg", "jpeg"],
+  },
+
+  // --- Tax. Built; the arithmetic lives in tax.ts. ---
+  {
+    slug: "tax",
+    name: "Tax calculator",
+    blurb: "Old vs new regime for FY 2026-27, slab by slab.",
+    hue: "tax",
+    icon: "rupee",
+    href: "/tax",
+    status: "new",
+    action: "Compare regimes",
   },
 
   // --- Not built yet. These never link to an empty page. ---
@@ -175,7 +193,7 @@ export const TOOLS: Tool[] = [
     hue: "career",
     icon: "target",
     href: "/ats",
-    status: "soon",
+    status: "building",
     action: "Notify me",
     accepts: ["pdf", "docx"],
   },
@@ -186,16 +204,6 @@ export const TOOLS: Tool[] = [
     hue: "ai",
     icon: "chat",
     href: "/ai",
-    status: "soon",
-    action: "Notify me",
-  },
-  {
-    slug: "tax",
-    name: "Tax & ITR help",
-    blurb: "Compare regimes, then file with guidance.",
-    hue: "tax",
-    icon: "rupee",
-    href: "/tax",
     status: "soon",
     action: "Notify me",
   },
@@ -219,14 +227,14 @@ export function toolsByHue(hue: TileHue): Tool[] {
 }
 
 export function liveTools(): Tool[] {
-  return TOOLS.filter((t) => t.status !== "soon");
+  return TOOLS.filter(isLive);
 }
 
 /** Tools that can open a file with this extension. Built ones come first. */
 export function toolsAccepting(extension: string): Tool[] {
   const ext = extension.toLowerCase().replace(/^\./, "");
   return TOOLS.filter((t) => t.accepts?.includes(ext)).sort(
-    (a, b) => Number(b.status !== "soon") - Number(a.status !== "soon"),
+    (a, b) => Number(isLive(b)) - Number(isLive(a)),
   );
 }
 
@@ -269,7 +277,7 @@ export function searchTools(query: string, limit = 6): Tool[] {
     else if (q.split(/\s+/).some((word) => word.length > 2 && name.includes(word)))
       score = 10;
 
-    if (score > 0 && tool.status !== "soon") score += 5;
+    if (score > 0 && isLive(tool)) score += 5;
     return { tool, score };
   })
     .filter((row) => row.score > 0)

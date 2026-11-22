@@ -1,0 +1,48 @@
+.nav {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.inner {
+  display: flex; align-items: center; gap: 24px; height: 64px;
+  max-width: calc(var(--container) + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter);
+}
+.logo { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 18px; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
+.mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: var(--r-md); background: var(--brand); color: var(--on-brand); }
+.mark svg { width: 16px; height: 16px; }
+
+.links { display: flex; align-items: center; gap: 4px; margin-left: 8px; }
+.links a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: var(--r-md);
+  font-size: 15px; font-weight: 500; color: var(--muted);
+}
+.links a:hover { color: var(--ink); background: var(--sunken); }
+
+.end { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.end .menuBtn { display: none; }
+
+.scrim { position: fixed; inset: 0; z-index: 50; border: 0; background: rgb(0 0 0 / .4); cursor: pointer; }
+.sheet {
+  position: fixed; top: 0; right: 0; z-index: 51; display: grid; align-content: start; gap: 16px;
+  width: min(360px, 100%); height: 100dvh; padding: 12px 16px 24px; overflow-y: auto;
+  background: var(--card); border-left: 1px solid var(--line); box-shadow: var(--shadow-pop);
+  animation: slide .2s ease both;
+}
+.sheetHead { display: flex; align-items: center; justify-content: space-between; height: 44px; }
+.sheetLinks { display: grid; gap: 2px; padding-top: 8px; border-top: 1px solid var(--line); }
+.sheetLinks a {
+  display: flex; align-items: center; min-height: 48px; padding: 0 12px; border-radius: var(--r-md);
+  font-size: 16px; font-weight: 600; color: var(--ink);
+}
+.sheetLinks a:hover { background: var(--sunken); }
+@keyframes slide { from { transform: translateX(16px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+@media (max-width: 960px) {
+  .links { display: none; }
+  .end .menuBtn { display: inline-grid; }
+}
+@media (max-width: 600px) {
+  .inner { padding: 0 16px; gap: 12px; }
+  .end .open { display: none; }
+}

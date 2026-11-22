@@ -1,23 +1,20 @@
-import { AiShell } from "@/components/ai/AiShell";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { SiteAvtar } from "@/components/site/SiteAvtar";
+import { SiteNav } from "@/components/site/SiteNav";
+import { Footer } from "@/components/ui/Footer";
 
 /**
- * The marketing shell: navbar, page, footer. Only /welcome uses it now — the
- * working pages moved into the app shell, where the sidebar is the
- * navigation.
+ * The public shell: navbar, page, footer, and AVTAR in the corner. Only
+ * /welcome uses it — the working pages live in the app shell.
  */
-export default function SiteLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <Navbar />
-      <main>{children}</main>
+    <div className="ui">
+      <SiteNav />
+      <main id="main" tabIndex={-1}>
+        {children}
+      </main>
       <Footer />
-      <AiShell />
-    </>
+      <SiteAvtar />
+    </div>
   );
 }

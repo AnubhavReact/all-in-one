@@ -20,6 +20,8 @@ export type HistoryEntry = {
   /** An icon name from the design system's set. */
   icon: string;
   bytes: number;
+  /** Short facts about the result, e.g. "4 pages". Optional: older entries lack it. */
+  detail?: string;
   /** Epoch milliseconds. */
   at: number;
 };

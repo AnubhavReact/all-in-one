@@ -1,0 +1,55 @@
+.win {
+  --step-ms: 3000ms;
+  display: grid; overflow: hidden; border-radius: var(--r-xl); background: var(--char);
+  color: var(--char-ink); box-shadow: var(--shadow-pop); border: 1px solid var(--char-line);
+}
+.bar {
+  position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  height: 40px; padding: 0 12px 0 14px; background: var(--char-2); border-bottom: 1px solid var(--char-line);
+}
+.dots { display: flex; gap: 6px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--char-line); }
+.title {
+  position: absolute; left: 50%; transform: translateX(-50%); max-width: calc(100% - 200px);
+  font-size: 13px; font-weight: 600; color: var(--char-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pill {
+  height: 22px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: var(--r-pill);
+  border: 1px solid var(--char-line); font-size: 10px; font-weight: 700; letter-spacing: .1em; color: var(--char-muted);
+}
+.stage { position: relative; height: 330px; overflow: hidden; }
+.scene { position: absolute; inset: 0; padding: 24px; animation: enter .35s ease both; }
+@keyframes enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.foot {
+  display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center;
+  padding: 12px 14px; background: var(--char-2); border-top: 1px solid var(--char-line);
+}
+.play {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--char-line); background: var(--char-3); color: var(--char-ink); cursor: pointer;
+}
+.play svg { width: 18px; height: 18px; }
+.play:hover { background: var(--char-line); }
+.play:focus-visible, .seg:focus-visible { outline: 3px solid var(--progress); outline-offset: 2px; }
+.meta { display: grid; gap: 8px; min-width: 0; }
+.cap { font-size: 14px; line-height: 20px; color: var(--char-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cap b { font-family: var(--font-mono); font-weight: 600; color: var(--char-muted); margin-right: 4px; }
+.progress { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; }
+/* Each segment is a 24px-tall button around a 4px bar, so it is easy to hit. */
+.seg { position: relative; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; border-radius: 4px; }
+.seg::before, .seg span { content: ""; position: absolute; left: 0; right: 0; top: 10px; height: 4px; border-radius: 2px; }
+.seg::before { background: var(--char-line); }
+.done::before { background: var(--progress); }
+.seg span { background: var(--progress); transform-origin: left; animation: fill var(--step-ms) linear both; }
+@keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (max-width: 600px) {
+  .stage { height: 260px; }
+  .scene { padding: 16px; }
+  .dots { display: none; }
+  .title { position: static; transform: none; max-width: none; flex: 1; min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene { animation: none; }
+}

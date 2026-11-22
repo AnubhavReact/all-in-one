@@ -1,0 +1,22 @@
+.chip {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 6px 14px;
+  border-radius: var(--r-pill); border: 1px solid transparent;
+  font-size: 14px; line-height: 20px; font-weight: 500; white-space: nowrap;
+}
+.chip svg { width: 16px; height: 16px; flex: none; }
+/* Interactive chips grow to a 44px tap target without looking bigger. */
+.tap { position: relative; cursor: pointer; transition: background-color .15s, border-color .15s, color .15s; }
+.tap::after { content: ""; position: absolute; inset: -4px 0; }
+
+.promise { background: var(--sunken); color: var(--ink); }
+.promise svg { color: var(--success); }
+
+.suggestion { background: var(--card); color: var(--ink); border-color: var(--line-strong); }
+.suggestion:hover { border-color: var(--brand); background: var(--brand-soft); }
+
+.link { background: var(--brand-soft); color: var(--brand-ink); font-weight: 600; }
+.link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.filter { background: var(--card); color: var(--muted); border-color: var(--line-strong); }
+.filter:hover { color: var(--ink); }
+.filter[aria-pressed="true"] { background: var(--ink); color: var(--card); border-color: var(--ink); }
