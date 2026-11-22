@@ -1,23 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
-import "@/styles/tokens.css";
-import "@/styles/components.css";
-import "@/styles/app.css";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import "@/styles/ui/tokens.css";
 
 // The handoff loads these with a CSS @import. next/font self-hosts them
 // instead, which removes a render-blocking request and the flash of fallback
 // text. app.css points the --font-* tokens at these variables.
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
-  display: "swap",
-});
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 const jetBrainsMono = JetBrains_Mono({
@@ -39,9 +31,9 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "AllInOne — PDFs, jobs, resume, tax and AI in one place",
+  title: "AllInOne — free PDF tools, tax calculator and interview prep",
   description:
-    "Edit PDFs, build an ATS-ready resume, find jobs, compare tax regimes and get ITR help — just ask, or drop a file.",
+    "Merge and split PDFs, compare old vs new tax regimes and prepare for interviews. Free, no account, and your files never leave your browser.",
   // From the brand pack. The .ico is gone: every browser that matters reads
   // the SVG, and the 32px PNG covers the rest.
   icons: {
@@ -54,25 +46,30 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   openGraph: {
     type: "website",
-    title: "AllInOne — every tool you need, one AI that knows them all",
+    title: "AllInOne — your everyday tools, all in one tab",
     description:
-      "PDF tools, jobs, resume builder, ATS check, tax & ITR help and AI chat in one place.",
+      "Free PDF tools, a tax calculator and interview prep. No account, and your files never leave your browser.",
     images: ["/og-image-1200x630.png"],
   },
   twitter: { card: "summary_large_image" },
 };
 
-/** Matches --surface-0 in dusk, so the phone's chrome blends into the page. */
-export const viewport: Viewport = { themeColor: "#111a2e" };
+/** Matches --page in each theme, so the phone's chrome blends into the page. */
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafaf9" },
+    { media: "(prefers-color-scheme: dark)", color: "#141414" },
+  ],
+};
 
 /**
  * Applies the saved theme before the first paint. Without this the page
- * renders in dusk and then jumps to light for anyone who chose light.
+ * renders in light and then jumps to dusk for anyone who chose dusk.
  *
  * It goes through next/script with beforeInteractive, not a bare <script>:
  * React never runs a script tag it renders itself, and warns about it.
  */
-const THEME_SCRIPT = `try{var t=localStorage.getItem('aio-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}`;
+const THEME_SCRIPT = `try{var t=localStorage.getItem('aio-theme');if(t==='dusk')t='dark';if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}`;
 
 export default function RootLayout({
   children,
@@ -80,15 +77,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="dusk"
-      className={`${jakarta.variable} ${inter.variable} ${jetBrainsMono.variable}`}
+      data-theme="light"
+      className={`${inter.variable} ${jetBrainsMono.variable}`}
       suppressHydrationWarning
     >
       <body>
         <Script id="aio-theme" strategy="beforeInteractive">
           {THEME_SCRIPT}
         </Script>
-        <div className="aio">{children}</div>
+        {children}
       </body>
     </html>
   );

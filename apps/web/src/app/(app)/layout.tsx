@@ -1,14 +1,6 @@
-import { AppShell } from "@/components/AppShell";
+import { AppFrame } from "@/components/shell/AppFrame";
 
-/**
- * Every working page lives inside the v3 shell: the sidebar is the
- * navigation, so these pages carry no navbar of their own. The AI rail is
- * docked on the home page only; a tool page needs the room.
- */
-export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <AppShell>{children}</AppShell>;
+/** Every working page lives inside the app shell: sidebar, top bar, ⌘K, AVTAR. */
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return <AppFrame>{children}</AppFrame>;
 }

@@ -1,0 +1,35 @@
+/* Scene pieces for the TollWala storyboards. Charcoal tokens only. */
+.checks { display: grid; gap: 8px; }
+.check { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; align-items: center; font-size: 13px; line-height: 18px; animation: tIn .3s ease both; }
+.check:nth-child(2) { animation-delay: .4s; }
+.check:nth-child(3) { animation-delay: .8s; }
+.check svg { width: 18px; height: 18px; color: var(--char-muted); }
+
+.form { display: grid; gap: 8px; }
+.field {
+  display: grid; gap: 2px; padding: 10px 12px; border-radius: var(--r-md);
+  background: var(--char-2); border: 1px solid var(--char-line); min-width: 0; animation: tIn .3s ease both;
+}
+.field:nth-child(2) { animation-delay: .25s; }
+.field:nth-child(3) { animation-delay: .5s; }
+.field span { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--char-muted); }
+.field b { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.lanes { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; }
+.lane {
+  display: grid; justify-items: center; gap: 8px; padding: 10px 0; border-radius: var(--r-md);
+  background: var(--char-2); border: 1px solid var(--char-line); font: 600 11px/1 var(--font-mono); color: var(--char-muted);
+}
+.lane i { width: 8px; height: 8px; border-radius: 50%; background: var(--char-ok); }
+.laneDown { border-color: var(--progress); color: var(--char-ink); }
+.laneDown i { background: transparent; border: 2px solid var(--progress); }
+
+.plate {
+  display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--r-lg);
+  background: var(--char-2); border: 1px solid var(--char-line); animation: tIn .3s ease both;
+}
+.plate svg { width: 22px; height: 22px; color: var(--progress); flex: none; }
+.plate b { font: 700 18px/1 var(--font-mono); letter-spacing: .08em; }
+
+@keyframes tIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .check, .field, .plate { animation: none; } }

@@ -1,49 +1,49 @@
-import { sectionById, toolsByHue } from "@aio/core";
-import { HeroDrop } from "@/components/HeroDrop";
-import { ToolCard } from "@/components/ToolCard";
-import { Note } from "@/components/ui/Note";
-import { PageHead } from "@/components/ui/PageHead";
+import { TOOLS, isLive } from "@aio/core";
+import { SectionIntro } from "@/components/ui/SectionIntro";
+import { ToolCard } from "@/components/ui/ToolCard";
+import { toneFor, toolIcon } from "@/lib/tool-ui";
+import s from "@/components/pdf/Pdf.module.css";
 
 export const metadata = {
   title: "PDF tools — AllInOne",
-  description:
-    "Merge, split, rotate and convert PDFs without uploading them anywhere.",
+  description: "Merge, split, rotate and convert PDFs without uploading them anywhere.",
 };
 
 export default function PdfIndex() {
-  const section = sectionById("pdf");
-  const tools = toolsByHue("pdf");
+  const tools = TOOLS.filter((tool) => tool.href.startsWith("/pdf/"));
 
   return (
-    <div className="aio-page">
-      <PageHead
-        icon="file"
-        hue="pdf"
-        title="PDF tools"
-        blurb={section?.blurb ?? ""}
-      />
+    <div className={s.indexPage}>
+      <SectionIntro eyebrow="PDF tools" title="Every PDF job, in this tab" as="h1">
+        Merge, split, rotate and convert. Your files never leave this device, so there is nothing to upload and
+        nothing to delete afterwards.
+      </SectionIntro>
 
-      {/* Dropping a file is the fastest way in: it picks the tool for you. */}
-      <HeroDrop variant="bare" />
-
-      <section>
-        <div className="aio-section-head">
-          <div>
-            <h2>All five, one click away</h2>
-            <p>Every one runs in this tab.</p>
-          </div>
-        </div>
-        <div className="aio-p-grid5">
-          {tools.map((tool) => (
-            <ToolCard key={tool.slug} tool={tool} />
-          ))}
-        </div>
-      </section>
-
-      <Note icon="shield">
-        These run on your device, so they also work with no internet and there
-        is nothing stored for you to delete afterwards.
-      </Note>
+      <ul className={s.toolGrid} aria-label="PDF tools">
+        {tools.map((tool) => (
+          <li key={tool.slug}>
+            {isLive(tool) ? (
+              <ToolCard
+                href={tool.href}
+                icon={toolIcon(tool)}
+                tone={toneFor(tool.hue)}
+                title={tool.name}
+                blurb={tool.blurb}
+                action={tool.action}
+              />
+            ) : (
+              <ToolCard
+                variant="soon"
+                building={tool.status === "building"}
+                icon={toolIcon(tool)}
+                tone={toneFor(tool.hue)}
+                title={tool.name}
+                blurb={tool.blurb}
+              />
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

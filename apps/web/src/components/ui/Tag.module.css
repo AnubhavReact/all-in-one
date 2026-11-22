@@ -1,0 +1,18 @@
+.tag {
+  display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px;
+  border-radius: var(--r-pill); border: 1px solid transparent;
+  font-size: 12px; line-height: 1; font-weight: 600; white-space: nowrap;
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: none; }
+.live { background: var(--success-soft); color: var(--success); }
+.new { background: var(--brand); color: var(--on-brand); }
+.building { background: var(--brand-soft); color: var(--brand-ink); }
+.building .dot { animation: pulse 1.6s ease-in-out infinite; }
+.soon { background: transparent; color: var(--faint); border: 1px dashed var(--soon-line); }
+.sample { background: transparent; color: var(--muted); border-color: var(--line-strong); letter-spacing: .08em; text-transform: uppercase; font-size: 11px; }
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 45%, transparent); }
+  50% { box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) { .building .dot { animation: none; } }

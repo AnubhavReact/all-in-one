@@ -1,0 +1,11 @@
+.logo { display: inline-flex; align-items: center; gap: 14px; }
+.mark { width: 52px; height: 52px; flex: none; }
+.tile { fill: var(--tw-navy); }
+.post { fill: var(--scene-lane); }
+.armBody { fill: var(--scene-amber); }
+.armGap { fill: var(--tw-navy); }
+.dot { fill: var(--char-ok); }
+.words { display: grid; gap: 2px; }
+.words strong { font-size: 28px; line-height: 30px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+.words strong span { color: var(--tw-green); }
+.words small { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); }

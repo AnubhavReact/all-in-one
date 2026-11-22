@@ -1,0 +1,39 @@
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 18px; border-radius: var(--r-md);
+  border: 1px solid transparent; font-size: 15px; font-weight: 600; line-height: 1;
+  white-space: nowrap; cursor: pointer; text-decoration: none;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.btn svg { width: 18px; height: 18px; flex: none; }
+.lg { height: 52px; padding: 0 24px; font-size: 16px; }
+.block { width: 100%; }
+
+.primary { background: var(--brand); color: var(--on-brand); }
+.primary:hover { background: var(--brand-hover); }
+
+.secondary { background: var(--card); color: var(--ink); border-color: var(--line-strong); }
+.secondary:hover { background: var(--brand-soft); border-color: var(--brand); }
+
+.ghost { background: transparent; color: var(--brand-ink); padding-left: 8px; padding-right: 8px; }
+.ghost:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.btn:disabled, .btn[aria-disabled="true"] {
+  background: var(--sunken); color: var(--faint); border-color: var(--line);
+  cursor: not-allowed; text-decoration: none;
+}
+
+/* On a solid --brand surface (CTA band). */
+.onBrand { background: var(--on-brand); color: var(--brand-hover); }
+.onBrand:hover { background: rgb(255 255 255 / .88); }
+.onBrandOutline { background: transparent; color: var(--on-brand); border-color: var(--on-brand); }
+.onBrandOutline:hover { background: rgb(255 255 255 / .12); }
+
+.iconBtn {
+  display: inline-grid; place-items: center; width: 44px; height: 44px; flex: none;
+  border-radius: var(--r-md); border: 1px solid transparent; background: transparent;
+  color: var(--muted); cursor: pointer; transition: background-color .15s, color .15s;
+}
+.iconBtn svg { width: 20px; height: 20px; }
+.iconBtn:hover { background: var(--sunken); color: var(--ink); }
+.iconBtnOutline { border-color: var(--line); background: var(--card); }

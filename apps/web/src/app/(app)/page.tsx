@@ -1,199 +1,159 @@
 import Link from "next/link";
-import { TOOLS, toolsByHue } from "@aio/core";
-import { AskBar, type AskChip } from "@/components/ai/AskBar";
-import { HeroDrop } from "@/components/HeroDrop";
-import { RecentFiles } from "@/components/home/RecentFiles";
-import { Setup } from "@/components/home/Setup";
-import { Icon } from "@/components/ui/Icon";
+import type { Metadata } from "next";
+import { ArrowRight, BookOpen, Bot, Combine, IndianRupee, ShieldCheck, type LucideIcon } from "lucide-react";
+import { EMPTY_TAX_INPUTS, LEARN_TRACKS, compareRegimes } from "@aio/core";
+import { AskHero } from "@/components/home/AskHero";
+import { DemoTabs } from "@/components/home/DemoTabs";
+import { QuickTools } from "@/components/home/QuickTools";
+import { RailMobile, RightRail, railStyles as r } from "@/components/rail/RightRail";
+import { AskAvtarButton } from "@/components/ui/AskAvtarButton";
+import { IconTile, type Tone } from "@/components/ui/IconTile";
+import { AVTAR_STEPS } from "@/components/ui/demos/AvtarDemo";
+import { MERGE_STEPS } from "@/components/ui/demos/MergeDemo";
+import { TAX_STEPS } from "@/components/ui/demos/TaxDemo";
+import { inr } from "@/lib/format";
+import s from "@/components/home/Home.module.css";
 
-const CHIPS: readonly AskChip[] = [
-  { label: "Merge", icon: "merge", href: "/pdf/merge" },
-  { label: "Split", icon: "split", href: "/pdf/split" },
-  { label: "PDF to JPG", icon: "image", href: "/pdf/to-images" },
-  { label: "Rotate", icon: "rotate", href: "/pdf/organise" },
-];
+export const metadata: Metadata = {
+  title: "AllInOne — free PDF tools, tax calculator and interview prep",
+  description:
+    "Merge and split PDFs, compare old vs new tax regimes and prepare for interviews. Free, no account, and your files never leave your browser.",
+};
 
-/** The launcher row: the five that work, then the four that don't, tagged. */
-const QUICK = [
-  { label: "Merge PDFs", href: "/pdf/merge", icon: "merge", hue: "pdf" },
-  { label: "Split PDF", href: "/pdf/split", icon: "split", hue: "pdf" },
-  { label: "Rotate pages", href: "/pdf/organise", icon: "rotate", hue: "pdf" },
-  { label: "PDF to images", href: "/pdf/to-images", icon: "image", hue: "pdf" },
-  { label: "Images to PDF", href: "/pdf/from-images", icon: "file", hue: "pdf" },
-  { label: "ATS check", href: "/ats", icon: "target", hue: "career", tag: "Soon" },
-  { label: "Resume", href: "/resume", icon: "resume", hue: "career", tag: "Soon" },
-  { label: "Tax calculator", href: "/tax", icon: "calc", hue: "tax", tag: "Soon" },
-  { label: "AI chat", href: "/ai", icon: "chat", hue: "ai", tag: "Key" },
+const TAX = compareRegimes({ ...EMPTY_TAX_INPUTS, salary: 1_800_000, section80C: 150_000, section80D: 25_000 });
+const LEARN_COUNT = LEARN_TRACKS.reduce((sum, t) => sum + Number(t.stats[0].value), 0);
+
+type Goal = {
+  icon: LucideIcon;
+  tone: Tone;
+  title: string;
+  body: string;
+  links: { label: string; href: string }[];
+  stat: string;
+  ask?: boolean;
+};
+
+const GOALS: Goal[] = [
+  {
+    icon: Combine,
+    tone: "pdf",
+    title: "Sort out PDFs",
+    body: "Merge, split, rotate and convert, right here in the tab.",
+    links: [
+      { label: "Merge", href: "/pdf/merge" },
+      { label: "Split", href: "/pdf/split" },
+      { label: "Rotate", href: "/pdf/organise" },
+      { label: "PDF ↔ images", href: "/pdf/to-images" },
+    ],
+    stat: "0 bytes uploaded",
+  },
+  {
+    icon: IndianRupee,
+    tone: "tax",
+    title: "Save on tax",
+    body: "See which regime costs less for FY 2026-27, slab by slab.",
+    links: [{ label: "Tax calculator", href: "/tax" }],
+    stat: `Sample: ${inr(TAX.saving)} saved on ₹18L`,
+  },
+  {
+    icon: BookOpen,
+    tone: "learn",
+    title: "Prepare for interviews",
+    body: "System design, databases and DSA on three free study sites.",
+    links: LEARN_TRACKS.map((t) => ({ label: t.name, href: `/learn#${t.id}` })),
+    stat: `${LEARN_COUNT}+ topics and problems`,
+  },
+  {
+    icon: Bot,
+    tone: "brand",
+    title: "Get help",
+    body: "Ask AVTAR how any tool works. It answers from a fixed FAQ.",
+    links: [],
+    stat: "Works offline",
+    ask: true,
+  },
 ];
 
 /**
- * What is actually being worked on, in order. "Building" is the one in hand;
- * everything below it is a plan, and says so.
+ * Task first: "what do you want to do?" before any explaining. A returning
+ * visitor sees their recent files; a first-timer can start in one click.
  */
-const ROADMAP = [
-  {
-    icon: "target",
-    hue: "career",
-    status: "Building",
-    live: true,
-    title: "ATS score check",
-    blurb: "Score your resume against any job description.",
-    when: "Next up",
-  },
-  {
-    icon: "resume",
-    hue: "career",
-    status: "Designing",
-    live: false,
-    title: "Resume builder",
-    blurb: "ATS-friendly templates, export to PDF.",
-    when: "After ATS",
-  },
-  {
-    icon: "rupee",
-    hue: "tax",
-    status: "Designing",
-    live: false,
-    title: "Tax & ITR help",
-    blurb: "Old vs new regime, slab by slab. You file on the govt portal.",
-    when: "After resume",
-  },
-  {
-    icon: "briefcase",
-    hue: "career",
-    status: "Planned",
-    live: false,
-    title: "Find jobs",
-    blurb: "From feeds that allow it, like Adzuna and RemoteOK.",
-    when: "Later",
-  },
-];
-
 export default function Home() {
-  const pdfTools = toolsByHue("pdf").filter((tool) => tool.status !== "soon");
-
   return (
-    <div className="aio-page">
-      <section className="aio-hero-app">
-        <div className="aio-glow" aria-hidden />
-        <div>
-          <span className="aio-eyebrow">Your workspace</span>
-          <h1>
-            What do you need to{" "}
-            <span className="aio-grad-text">get done today?</span>
-          </h1>
-          <AskBar
-            /* The rail leaves this field about 180px wide, so the mock's
-               two-example placeholder would be cut off mid-word. */
-            placeholder="Ask, or name a tool…"
-            chips={CHIPS}
-            flat
-          />
+    <div className={r.layout}>
+      <div className={r.left}>
+      <AskHero />
+
+      <section className={s.sec} aria-labelledby="quick-h">
+        <div className={s.secHead}>
+          <h2 id="quick-h" className="t-h3">
+            Quick tools
+          </h2>
+          <Link href="/pdf">All PDF tools &rarr;</Link>
         </div>
-        <HeroDrop variant="bare" />
+        <QuickTools />
       </section>
 
-      <section>
-        <div className="aio-section-head">
+      <RailMobile />
+
+      <section className={s.sec} aria-labelledby="goals-h">
+        <div className={s.secHead}>
           <div>
-            <h2>Quick tools</h2>
-            <p>One click, no sign-up.</p>
+            <h2 id="goals-h" className="t-h3">
+              Pick by goal
+            </h2>
+            <p>Not sure which tool? Start from what you need.</p>
           </div>
-          <Link href="/pdf">All tools &rarr;</Link>
         </div>
-        <div className="aio-quick">
-          {QUICK.map((item) => (
-            <Link
-              href={item.href}
-              key={item.href}
-              className={item.tag ? "is-soon" : undefined}
-            >
-              {item.tag && <span className="tag">{item.tag}</span>}
-              <span className={`q q--${item.hue}`}>
-                <Icon name={item.icon} />
-              </span>
-              {item.label}
-            </Link>
+        <div className={s.goals}>
+          {GOALS.map((goal) => (
+            <article key={goal.title} className={s.goal}>
+              <IconTile icon={goal.icon} tone={goal.tone} size={48} />
+              <h3>{goal.title}</h3>
+              <p>{goal.body}</p>
+              <div className={s.goalLinks}>
+                {goal.links.map((link) => (
+                  <Link key={link.href} href={link.href}>
+                    {link.label}
+                    <ArrowRight aria-hidden strokeWidth={2} />
+                  </Link>
+                ))}
+                {goal.ask && <AskAvtarButton variant="ghost" label="Open AVTAR" />}
+              </div>
+              <span className={s.stat}>{goal.stat}</span>
+            </article>
           ))}
         </div>
       </section>
 
-      <section className="aio-p-two">
-        <RecentFiles />
-        <Setup />
-      </section>
-
-      <section>
-        <div className="aio-section-head">
+      <section className={s.sec} aria-labelledby="demo-h">
+        <div className={s.secHead}>
           <div>
-            <h2>PDF tools</h2>
-            <p>All five run in your browser.</p>
-          </div>
-          <Link href="/pdf">Open PDF tools &rarr;</Link>
-        </div>
-        <div className="aio-grid-auto">
-          {pdfTools.map((tool) => (
-            <Link className="aio-tool-row" href={tool.href} key={tool.slug}>
-              <span className="aio-tile aio-tile--pdf">
-                <Icon name={tool.icon} />
-              </span>
-              <div className="m">
-                <strong>{tool.name}</strong>
-                <span className="d">{tool.blurb}</span>
-              </div>
-              <Icon name="arrow" />
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <div className="aio-section-head">
-          <div>
-            <h2>Coming next</h2>
-            <p>
-              Honest about what&rsquo;s built. Each one links to what it will
-              do and why it isn&rsquo;t here yet.
-            </p>
+            <h2 id="demo-h" className="t-h3">
+              See it in action
+            </h2>
+            <p>Short sample demos. Press pause, or tap a step to look closer.</p>
           </div>
         </div>
-        <div className="aio-p-road4">
-          {ROADMAP.map((item) => {
-            const tool = TOOLS.find((t) => t.name === item.title);
-            return (
-              <div className="aio-road" key={item.title}>
-                <div className="aio-road-top">
-                  <span className={`aio-tile aio-tile--${item.hue}`}>
-                    <Icon name={item.icon} />
-                  </span>
-                  <span
-                    className={
-                      item.live
-                        ? "aio-badge aio-badge--new"
-                        : "aio-badge aio-badge--soon"
-                    }
-                  >
-                    {item.status}
-                  </span>
-                </div>
-                <strong>{item.title}</strong>
-                <p>{item.blurb}</p>
-                <div className="meta">
-                  <span>{item.when}</span>
-                  {tool && (
-                    <Link
-                      className="aio-btn aio-btn--ghost aio-btn--sm"
-                      href={tool.href}
-                    >
-                      What it will do
-                    </Link>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <DemoTabs
+          demos={[
+            { id: "merge", label: "PDF merge", title: "AllInOne · Merge PDFs", steps: MERGE_STEPS },
+            { id: "tax", label: "Tax", title: "AllInOne · Tax calculator", steps: TAX_STEPS },
+            { id: "avtar", label: "AVTAR", title: "AllInOne · AVTAR help", steps: AVTAR_STEPS },
+          ]}
+        />
       </section>
+
+      <aside className={s.strip} aria-label="Privacy">
+        <ShieldCheck aria-hidden strokeWidth={1.8} />
+        <span>Everything here runs in your browser. Nothing is uploaded.</span>
+        <Link href="/welcome#how" className="t-small t-accent">
+          How this works
+        </Link>
+      </aside>
+      </div>
+
+      <RightRail />
     </div>
   );
 }

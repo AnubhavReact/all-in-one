@@ -1,0 +1,151 @@
+/* AllInOne design system v5 — "C3 Calm neutral + indigo".
+ *
+ * The only file in the new system allowed to contain hex colours.
+ *
+ * Scoped to `.ui` while the old pages (still on styles/tokens.css) are being
+ * rebuilt. Once every page is on the new system, `.ui` moves onto <body> and
+ * these selectors become `:root` / `[data-theme="dark"]` as in the brief.
+ *
+ *   .ui                          follows <html data-theme>
+ *   .ui[data-theme="dark"]       forced dark (kitchen-sink panes)
+ *   .ui[data-theme="light"]      forced light, even inside a dark page
+ */
+
+.ui {
+  /* surfaces */
+  --page: #fafaf9;   --card: #ffffff;   --sunken: #f4f4f2;
+  --line: #ebebe9;   --line-strong: #d3d3cf;
+  /* text (contrast on --card) */
+  --ink: #191919;      /* 17.4:1 */
+  --muted: #5f5e5b;    /* 6.4:1 */
+  --faint: #6f6e69;    /* 5.1:1  meta + Soon text, never lighter */
+  /* accent */
+  --brand: #5e6ad2;
+  --brand-hover: #4a55bd;
+  --brand-ink: #4a55bd;
+  --brand-soft: #eef0fb;
+  --on-brand: #ffffff;
+  --progress: #8f98ff;
+  --focus: #5e6ad2;
+  /* signals */
+  --success: #1d7a43; --success-soft: #e3f4e9;
+  --warning: #8a5a00; --warning-soft: #fdf1d8;
+  --danger:  #b8322a; --danger-soft:  #fbe7e5;
+  /* Soon */
+  --soon: #6f6e69; --soon-bg: #f4f4f2; --soon-line: #d3d3cf;
+  /* section icon tiles */
+  --tile-pdf: #c2452d;    --tile-pdf-bg: #ffebe6;
+  --tile-career: #0f7f74; --tile-career-bg: #dff4f1;
+  --tile-tax: #1d7a43;    --tile-tax-bg: #e3f4e9;
+  --tile-learn: #0b6fa8;  --tile-learn-bg: #e1f1fb;
+  --tile-brand: #5e6ad2;  --tile-brand-bg: #eef0fb;
+  /* charcoal: demo windows + footer */
+  --char: #191919; --char-2: #222222; --char-3: #2a2a2a; --char-line: #2f2f2f;
+  --char-ink: #f5f5f4; --char-muted: #a8a7a2; --char-ok: #5fd08f;
+  /* toll-lane illustration (charcoal scene, same in both themes) */
+  --scene-road: #262626; --scene-verge: #2e332c; --scene-lane: #d6d6d2;
+  --scene-amber: #f2c063; --scene-red: #d9483b;
+  --scene-car-a: #4f7d5c; --scene-car-b: #e9e9e6; --scene-glass: #3a3f46;
+  /* TollWala's own mark: navy tile, green "Wala" */
+  --tw-navy: #0f1a2e; --tw-green: #2f6b45; --tw-sign: #2f6b45;
+  /* depth */
+  --shadow-card: 0 1px 2px rgba(0,0,0,.04);
+  --shadow-lift: 0 8px 24px rgba(0,0,0,.08);
+  --shadow-pop:  0 20px 48px rgba(0,0,0,.16);
+  /* shape */
+  --r-sm: 6px; --r-md: 8px; --r-lg: 10px; --r-xl: 14px; --r-pill: 999px;
+  /* type: next/font variables from app/layout.tsx */
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+  /* layout */
+  --container: 1200px; --gutter: 32px; --sidebar: 256px;
+  --section-gap: clamp(72px, 9vw, 96px);
+  --app-gap: 40px;
+}
+
+:is([data-theme="dark"], [data-theme="dusk"]) .ui:not([data-theme="light"]),
+.ui[data-theme="dark"] {
+  --page: #141414; --card: #1c1c1c; --sunken: #111111;
+  --line: #2a2a2a; --line-strong: #3d3d3d;
+  --ink: #f5f5f4; --muted: #a8a7a2; --faint: #8f8e89;
+  --brand-ink: #a3abff; --brand-soft: #23264a; --focus: #a3abff;
+  --success: #5fd08f; --success-soft: #173a2c;
+  --warning: #f2c063; --warning-soft: #3a2e14;
+  --danger: #ff8f85;  --danger-soft: #3d1f24;
+  --soon: #a8a7a2; --soon-bg: #222222; --soon-line: #3d3d3d;
+  --tile-pdf: #ff9d88; --tile-pdf-bg: #3a2226;
+  --tile-career: #5fd6c6; --tile-career-bg: #123532;
+  --tile-tax: #6fdc9c; --tile-tax-bg: #15362a;
+  --tile-learn: #7cc8f5; --tile-learn-bg: #13304a;
+  --tile-brand: #a3abff; --tile-brand-bg: #23264a;
+  --tw-green: #6fdc9c;
+  --char: #0c0c0c; --char-2: #181818; --char-line: #2a2a2a;
+  --shadow-card: 0 1px 2px rgba(0,0,0,.3);
+  --shadow-lift: 0 10px 28px rgba(0,0,0,.4);
+  --shadow-pop: 0 20px 48px rgba(0,0,0,.5);
+  color-scheme: dark;
+}
+
+/* The page behind .ui, so overscroll and the first paint match. */
+html, body { margin: 0; padding: 0; background: #fafaf9; }
+:is([data-theme="dark"], [data-theme="dusk"]) body,
+html:is([data-theme="dark"], [data-theme="dusk"]) { background: #141414; }
+
+/* ---------------------------------------------------------------- base
+ * Resets sit inside :where() so any component class beats them. */
+
+.ui {
+  color-scheme: light;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--ink);
+  background: var(--page);
+  -webkit-font-smoothing: antialiased;
+}
+:where(.ui) *, :where(.ui) *::before, :where(.ui) *::after { box-sizing: border-box; }
+:where(.ui) :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+:where(.ui a) { color: inherit; text-decoration: none; }
+:where(.ui) :where(h1, h2, h3, h4, p, ul, ol, dl, figure, fieldset) { margin: 0; }
+:where(.ui) :where(ul, ol) { padding: 0; list-style: none; }
+:where(.ui) :where(button, input, select, textarea) { font: inherit; color: inherit; }
+.ui ::selection { background: var(--brand-soft); }
+
+/* ---------------------------------------------------------- type scale */
+
+.ui .t-display-xl { font-size: 64px; line-height: 68px; font-weight: 800; letter-spacing: -0.04em; }
+.ui .t-display-l  { font-size: 48px; line-height: 54px; font-weight: 800; letter-spacing: -0.04em; }
+.ui .t-h1   { font-size: 36px; line-height: 44px; font-weight: 800; letter-spacing: -0.04em; }
+.ui .t-h2   { font-size: 28px; line-height: 36px; font-weight: 700; letter-spacing: -0.025em; }
+.ui .t-h3   { font-size: 20px; line-height: 28px; font-weight: 700; letter-spacing: -0.015em; }
+.ui .t-body-l { font-size: 18px; line-height: 28px; color: var(--muted); }
+.ui .t-body { font-size: 16px; line-height: 24px; }
+.ui .t-small { font-size: 14px; line-height: 20px; font-weight: 500; }
+.ui .t-eyebrow { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--brand-ink); }
+.ui .t-mono { font-family: var(--font-mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+.ui .t-mono-num { font-family: var(--font-mono); font-size: 18px; line-height: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ui .t-accent { color: var(--brand-ink); }
+.ui .t-muted { color: var(--muted); }
+
+@media (max-width: 600px) {
+  .ui .t-display-xl { font-size: 40px; line-height: 44px; }
+  .ui .t-display-l  { font-size: 32px; line-height: 38px; }
+  .ui .t-h1   { font-size: 28px; line-height: 34px; }
+  .ui .t-h2   { font-size: 22px; line-height: 30px; }
+  .ui .t-h3   { font-size: 18px; line-height: 26px; }
+  .ui .t-body-l { font-size: 17px; line-height: 26px; }
+  .ui .t-mono-num { font-size: 16px; line-height: 24px; }
+}
+
+.ui .sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui *, .ui *::before, .ui *::after {
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

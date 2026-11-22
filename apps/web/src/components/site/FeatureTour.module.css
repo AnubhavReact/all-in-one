@@ -1,0 +1,45 @@
+.tour { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; align-items: start; }
+
+.tabs { position: sticky; top: 88px; display: grid; gap: 4px; }
+.tab {
+  display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 14px; text-align: left;
+  border-radius: var(--r-md); border: 1px solid transparent; background: transparent;
+  font-size: 15px; font-weight: 600; color: var(--muted); cursor: pointer;
+  transition: background-color .15s, color .15s, border-color .15s;
+}
+.tab svg { width: 18px; height: 18px; flex: none; }
+.tab:hover { color: var(--ink); background: var(--sunken); }
+.tab[aria-selected="true"] { color: var(--ink); background: var(--card); border-color: var(--line); box-shadow: var(--shadow-card); }
+.tab[aria-selected="true"] svg { color: var(--brand-ink); }
+.num { font: 600 12px/1 var(--font-mono); color: var(--faint); font-variant-numeric: tabular-nums; }
+.tab[aria-selected="true"] .num { color: var(--brand-ink); }
+
+.panel {
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-areas: "copy demo" "features features";
+  gap: 32px 40px; align-items: center;
+  padding: 32px; border-radius: var(--r-xl); background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-card);
+}
+.copy { grid-area: copy; display: grid; gap: 16px; align-content: start; }
+.body { font-size: 16px; line-height: 24px; color: var(--muted); }
+.features { grid-area: features; display: grid; grid-template-columns: 1fr 1fr; gap: 20px 32px; padding-top: 28px; border-top: 1px solid var(--line); }
+.promises { display: flex; flex-wrap: wrap; gap: 8px; }
+.demo { grid-area: demo; min-width: 0; }
+
+@media (max-width: 1180px) {
+  .panel { grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "demo" "features"; }
+}
+@media (max-width: 860px) {
+  .tour { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .tabs {
+    position: static; display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory;
+    margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex: none; scroll-snap-align: start; min-height: 44px; border-color: var(--line); white-space: nowrap; }
+  .tab[aria-selected="true"] { border-color: var(--brand); }
+}
+@media (max-width: 600px) {
+  .panel { padding: 20px 16px; gap: 24px; }
+  .tabs { margin: 0 -16px; padding: 4px 16px; }
+  .features { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+}

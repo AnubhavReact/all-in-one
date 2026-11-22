@@ -26,7 +26,7 @@ const CHROME_PATHS = [
   "/usr/bin/chromium",
 ];
 
-const PAGES = ["/", "/welcome", "/pdf", "/pdf/merge", "/pdf/split", "/jobs"];
+const PAGES = ["/", "/learn", "/tollwala", "/welcome", "/pdf", "/pdf/merge", "/pdf/split", "/pdf/organise", "/pdf/to-images", "/pdf/from-images", "/tax", "/ats", "/jobs", "/dev/kitchen-sink"];
 const WIDTHS = [390, 768, 1440];
 
 async function findChrome() {
@@ -83,59 +83,49 @@ for (const width of WIDTHS) {
 }
 
 /**
- * The AI surfaces only exist once something is opened, so a plain page load
- * never sees them. Each of these opens one and shoots the viewport.
+ * The palette, AVTAR and the drawer only exist once opened, so a plain page
+ * load never sees them. Each of these opens one and shoots the viewport.
  */
 const STATES = [
   {
     name: "palette",
     open: async (page) => {
-      await page.keyboard.down("Meta");
-      await page.keyboard.press("k");
-      await page.keyboard.up("Meta");
-      await page.type(".aio-cmd-input input", "pdf");
-      await page.waitForSelector(".aio-cmd-item");
+      await page.click('button[aria-label^="Search tools"]');
+      await page.waitForSelector('[role="dialog"] input');
+      await page.type('[role="dialog"] input', "pdf");
+      await page.waitForSelector('[role="option"]');
     },
   },
   {
-    name: "assistant",
-    // On the home page at 1440 the assistant is already docked in the rail,
-    // so the launcher only exists on the marketing page at that width.
-    path: "/welcome",
+    name: "avtar",
     open: async (page) => {
-      await page.click(".aio-p-launcher");
-      await page.waitForSelector(".aio-assist-foot");
-    },
-  },
-  {
-    name: "drawer",
-    // The sidebar is the navigation, and below 1024 it only exists after a
-    // tap, so it never gets looked at otherwise.
-    open: async (page) => {
-      await page.click(".aio-p-drawerclose");
-      await page.waitForFunction(
-        () =>
-          document.querySelector(".aio-shell")?.getAttribute("data-drawer") ===
-          "open",
-      );
+      await page.click('button[aria-label^="Ask AVTAR"]');
+      await page.waitForSelector("#avtar-input");
+      await page.type("#avtar-input", "How do I merge PDFs?");
+      await page.keyboard.press("Enter");
       await new Promise((resolve) => setTimeout(resolve, 300));
     },
   },
   {
-    name: "mega",
+    name: "avtar-welcome",
     path: "/welcome",
     open: async (page) => {
-      // Hover, never click: a click on the trigger navigates to /pdf.
-      await page.hover(".aio-nav-links a");
-      await page.waitForSelector(".aio-p-mega", { timeout: 5000 });
+      await page.click('button[aria-label^="Ask AVTAR"]');
+      await page.waitForSelector("#avtar-input");
+    },
+  },
+  {
+    name: "drawer",
+    // Below 1024 the sidebar only exists after a tap.
+    open: async (page) => {
+      await page.click('button[aria-label="Open menu"]');
+      await new Promise((resolve) => setTimeout(resolve, 350));
     },
   },
 ];
 
 for (const width of [390, 1440]) {
   for (const state of STATES) {
-    // The mega menu is desktop-only; the drawer is the opposite.
-    if (state.name === "mega" && width < 1024) continue;
     if (state.name === "drawer" && width >= 1024) continue;
 
     const page = await browser.newPage();
